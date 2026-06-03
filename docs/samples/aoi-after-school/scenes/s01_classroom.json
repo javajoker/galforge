@@ -1,0 +1,55 @@
+{
+  "gvnf": "1.0",
+  "id": "s01_classroom",
+  "stageMode": "auto",
+  "cast": ["aoi", "rin", "mei", "yuu"],
+  "_note": "Stage trace is annotated in samples/README.md. Watch how aoi/rin/mei never exceed two on-screen sprites — the third speaker evicts the non-active partner (script-standard §6.3).",
+  "script": [
+    { "bg": "classroom_sunset", "transition": { "type": "fade", "duration": 900, "color": "#000000" } },
+    { "bgm": "school_theme", "fade": 800 },
+    { "narrate": "@s01.intro" },
+
+    { "se": "door" },
+    { "show": "aoi", "at": "left", "outfit": "uniform", "face": "surprised", "transition": "dissolve" },
+    { "say": "aoi", "id": "s01_001", "text": "@s01.aoi.001", "face": "surprised", "voice": "auto" },
+
+    { "say": "yuu", "id": "s01_002", "text": "@s01.yuu.001" },
+
+    { "face": "aoi", "to": "smile", "transition": "dissolve" },
+    { "say": "aoi", "id": "s01_003", "text": "@s01.aoi.003" },
+
+    { "se": "door" },
+    { "say": "rin", "id": "s01_004", "text": "@s01.rin.004", "face": "smile", "voice": "auto" },
+
+    { "say": "aoi", "id": "s01_005", "text": "@s01.aoi.005", "face": "blush" },
+
+    { "_comment": "mei is the THIRD speaker; auto-stage evicts the non-active partner (rin) and seats mei at the right slot.",
+      "say": "mei", "id": "s01_006", "text": "@s01.mei.006", "face": "neutral" },
+    { "say": "aoi", "id": "s01_007", "text": "@s01.aoi.007" },
+
+    { "_comment": "Item close-up: foreground the key over a dimmed scene, then restore.",
+      "closeup": "class_key", "caption": "@s01.key.caption", "zoom": 1.3, "dim": 0.7, "transition": "dissolve" },
+    { "wait": 600 },
+    { "closeup": null },
+
+    { "_comment": "rin speaks again; she was evicted, so she swaps back in for mei. Still never >2 sprites.",
+      "say": "rin", "id": "s01_008", "text": "@s01.rin.008", "face": "smile" },
+
+    { "choice": "@choice.lunch.prompt", "id": "lunch", "options": [
+      { "text": "@choice.lunch.opt_join",  "set": { "aoi_affection": "+2", "met_rin": true, "route": "aoi" }, "jump": "#join" },
+      { "text": "@choice.lunch.opt_leave", "set": { "aoi_affection": "-1" }, "jump": "#leave" }
+    ] },
+
+    { "label": "join" },
+    { "say": "yuu", "id": "s01_009", "text": "@s01.yuu.join" },
+    { "face": "aoi", "to": "blush", "transition": "dissolve" },
+    { "se": "heartbeat" },
+    { "say": "aoi", "id": "s01_010", "text": "@s01.aoi.join", "face": "blush" },
+    { "jump": "s02_rooftop" },
+
+    { "label": "leave" },
+    { "say": "yuu", "id": "s01_011", "text": "@s01.yuu.leave" },
+    { "say": "aoi", "id": "s01_012", "text": "@s01.aoi.leave", "face": "sad" },
+    { "jump": "s02_rooftop" }
+  ]
+}

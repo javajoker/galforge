@@ -1,0 +1,95 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://galforge.dev/schemas/1.0/game.schema.json",
+  "title": "GVNF project manifest (game.json)",
+  "description": "Project entry point. See script-standard §2.",
+  "type": "object",
+  "required": ["gvnf", "id", "title", "version", "screen", "locales", "entry"],
+  "properties": {
+    "gvnf": { "$ref": "common.schema.json#/$defs/version" },
+    "id": { "$ref": "common.schema.json#/$defs/id" },
+    "title": { "$ref": "common.schema.json#/$defs/text" },
+    "version": { "type": "string" },
+    "authors": { "type": "array", "items": { "type": "string" } },
+    "screen": {
+      "type": "object",
+      "required": ["width", "height"],
+      "properties": {
+        "width": { "type": "integer", "minimum": 1 },
+        "height": { "type": "integer", "minimum": 1 }
+      },
+      "additionalProperties": false
+    },
+    "locales": {
+      "type": "object",
+      "required": ["default", "supported"],
+      "properties": {
+        "default": { "type": "string" },
+        "supported": {
+          "type": "array",
+          "items": { "type": "string" },
+          "minItems": 1
+        }
+      },
+      "additionalProperties": false
+    },
+    "entry": { "$ref": "common.schema.json#/$defs/id" },
+    "voicePattern": { "type": "string" },
+    "text": {
+      "type": "object",
+      "properties": {
+        "speed": { "oneOf": [{ "enum": ["slow", "normal", "fast", "instant"] }, { "type": "integer" }] },
+        "autoDelayMs": { "type": "integer", "minimum": 0 }
+      },
+      "additionalProperties": false
+    },
+    "audio": {
+      "type": "object",
+      "properties": {
+        "bgm": { "type": "number", "minimum": 0, "maximum": 1 },
+        "se": { "type": "number", "minimum": 0, "maximum": 1 },
+        "voice": { "type": "number", "minimum": 0, "maximum": 1 }
+      },
+      "additionalProperties": false
+    },
+    "stage": {
+      "type": "object",
+      "properties": {
+        "mode": { "enum": ["auto", "manual"] },
+        "emphasis": {
+          "type": "object",
+          "properties": {
+            "dim": { "type": "number", "minimum": 0, "maximum": 1 },
+            "offsetY": { "type": "number" },
+            "narration": { "enum": ["keep", "neutralize"] }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    "transitions": {
+      "type": "object",
+      "description": "Default transition per change type.",
+      "additionalProperties": { "$ref": "common.schema.json#/$defs/transition" }
+    },
+    "variables": {
+      "type": "object",
+      "description": "Global variable initial values.",
+      "additionalProperties": { "type": ["boolean", "number", "string"] },
+      "propertyNames": { "$ref": "common.schema.json#/$defs/id" }
+    },
+    "endings": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "properties": { "title": { "$ref": "common.schema.json#/$defs/text" } },
+        "required": ["title"],
+        "additionalProperties": true
+      },
+      "propertyNames": { "$ref": "common.schema.json#/$defs/id" }
+    },
+    "meta": { "type": "object" }
+  },
+  "additionalProperties": true
+}

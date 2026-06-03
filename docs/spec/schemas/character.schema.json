@@ -1,0 +1,35 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://galforge.dev/schemas/1.0/character.schema.json",
+  "title": "GVNF character (characters/<id>.json)",
+  "description": "Character identity and sprite presentation defaults. See script-standard §5.",
+  "type": "object",
+  "required": ["gvnf", "id", "name"],
+  "properties": {
+    "gvnf": { "$ref": "common.schema.json#/$defs/version" },
+    "id": { "$ref": "common.schema.json#/$defs/id" },
+    "name": { "$ref": "common.schema.json#/$defs/text" },
+    "nameColor": { "$ref": "common.schema.json#/$defs/color" },
+    "sprite": {
+      "description": "Sprites manifest key (defaults to id). null/omitted for voice-only or narrator characters.",
+      "oneOf": [{ "$ref": "common.schema.json#/$defs/id" }, { "type": "null" }]
+    },
+    "defaultOutfit": { "$ref": "common.schema.json#/$defs/id" },
+    "defaultPose": { "$ref": "common.schema.json#/$defs/id" },
+    "defaultFace": { "$ref": "common.schema.json#/$defs/id" },
+    "defaultPosition": { "$ref": "common.schema.json#/$defs/position" },
+    "voice": {
+      "type": "object",
+      "properties": {
+        "default": {
+          "type": ["string", "null"],
+          "description": "'auto' (use voicePattern), an explicit voice asset id, or null for silent."
+        },
+        "pitch": { "type": "number" }
+      },
+      "additionalProperties": true
+    },
+    "tags": { "type": "array", "items": { "type": "string" } }
+  },
+  "additionalProperties": true
+}

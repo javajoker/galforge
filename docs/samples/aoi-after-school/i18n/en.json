@@ -1,0 +1,40 @@
+{
+  "gvnf": "1.0",
+  "locale": "en",
+  "strings": {
+    "game.title": "Aoi, After School",
+
+    "char.aoi.name": "Aoi",
+    "char.rin.name": "Rin",
+    "char.mei.name": "Mei",
+    "char.yuu.name": "Yuu",
+
+    "ending.good.title": "Two of Us",
+    "ending.normal.title": "The Long Way Home",
+
+    "s01.intro": "The classroom held nothing but slanted light and the smell of chalk. Everyone had gone home an hour ago. Everyone, it seemed, except—",
+    "s01.aoi.001": "Oh— you're still here?",
+    "s01.yuu.001": "Yeah. I lost track of time, I guess.",
+    "s01.aoi.003": "Then we match. I do that all the time.",
+    "s01.rin.004": "Aoi! There you are— oh. Am I interrupting something?",
+    "s01.aoi.005": "R-Rin! It's nothing, we were just talking!",
+    "s01.mei.006": "Aoi. The student council needs the room key back before you leave.",
+    "s01.aoi.007": "Right— the key. I almost forgot I still had it.",
+    "s01.key.caption": "The brass key to Class 2-B. Warm from being held all afternoon.",
+    "s01.rin.008": "So! Lunch tomorrow, the four of us? You're coming too, right?",
+
+    "choice.lunch.prompt": "What do I say?",
+    "choice.lunch.opt_join": "“Yeah— mind if I join you?”",
+    "choice.lunch.opt_leave": "“…I should really get going.”",
+
+    "s01.yuu.join": "Yeah. I'd like that.",
+    "s01.aoi.join": "…Okay. Then it's a promise.",
+    "s01.yuu.leave": "Sorry. Maybe another time.",
+    "s01.aoi.leave": "Oh. …Sure. Another time.",
+
+    "s02.intro": "The rooftop had caught the last of the sun. Below us the town was turning gold, then amber, then something softer.",
+    "s02.cg_note": "She turned, and for a moment the whole sky was behind her.",
+    "s02.aoi.good": "Hey— thanks for staying. I'm glad it was you in that classroom.",
+    "s02.aoi.normal": "Guess I'll head down first. …See you tomorrow, maybe."
+  }
+}

@@ -1,0 +1,331 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://galforge.dev/schemas/1.0/scene.schema.json",
+  "title": "GVNF scene script (scenes/<id>.json)",
+  "description": "An ordered list of commands. See script-standard §8. Each command resolves to exactly one command verb (enforced by lint; face/outfit/voice are dual-use per §8.0); '_'-prefixed keys are ignored.",
+  "type": "object",
+  "required": ["gvnf", "id", "script"],
+  "properties": {
+    "gvnf": { "$ref": "common.schema.json#/$defs/version" },
+    "id": { "$ref": "common.schema.json#/$defs/id" },
+    "stageMode": { "enum": ["auto", "manual"] },
+    "cast": { "type": "array", "items": { "$ref": "common.schema.json#/$defs/id" } },
+    "script": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/command" }
+    }
+  },
+  "additionalProperties": true,
+  "$defs": {
+    "tr": { "$ref": "common.schema.json#/$defs/transition" },
+    "command": {
+      "type": "object",
+      "description": "A single command. Validated as 'matches at least one known verb'; exactly-one-verb is a lint rule.",
+      "anyOf": [
+        { "$ref": "#/$defs/cmd_say" },
+        { "$ref": "#/$defs/cmd_narrate" },
+        { "$ref": "#/$defs/cmd_bg" },
+        { "$ref": "#/$defs/cmd_show" },
+        { "$ref": "#/$defs/cmd_hide" },
+        { "$ref": "#/$defs/cmd_move" },
+        { "$ref": "#/$defs/cmd_face" },
+        { "$ref": "#/$defs/cmd_outfit" },
+        { "$ref": "#/$defs/cmd_cg" },
+        { "$ref": "#/$defs/cmd_closeup" },
+        { "$ref": "#/$defs/cmd_bgm" },
+        { "$ref": "#/$defs/cmd_se" },
+        { "$ref": "#/$defs/cmd_voice" },
+        { "$ref": "#/$defs/cmd_shake" },
+        { "$ref": "#/$defs/cmd_flash" },
+        { "$ref": "#/$defs/cmd_wait" },
+        { "$ref": "#/$defs/cmd_choice" },
+        { "$ref": "#/$defs/cmd_set" },
+        { "$ref": "#/$defs/cmd_if" },
+        { "$ref": "#/$defs/cmd_label" },
+        { "$ref": "#/$defs/cmd_jump" },
+        { "$ref": "#/$defs/cmd_call" },
+        { "$ref": "#/$defs/cmd_return" },
+        { "$ref": "#/$defs/cmd_end" }
+      ]
+    },
+
+    "cmd_say": {
+      "type": "object",
+      "required": ["say", "text"],
+      "properties": {
+        "say": { "oneOf": [{ "$ref": "common.schema.json#/$defs/id" }, { "type": "null" }] },
+        "text": { "$ref": "common.schema.json#/$defs/text" },
+        "id": { "type": "string" },
+        "face": { "$ref": "common.schema.json#/$defs/id" },
+        "outfit": { "$ref": "common.schema.json#/$defs/id" },
+        "voice": { "type": ["string", "null"], "description": "'auto', a voice asset id, or null." },
+        "at": { "$ref": "common.schema.json#/$defs/position" },
+        "as": { "$ref": "common.schema.json#/$defs/text" },
+        "transition": { "$ref": "#/$defs/tr" }
+      },
+      "additionalProperties": true
+    },
+    "cmd_narrate": {
+      "type": "object",
+      "required": ["narrate"],
+      "properties": {
+        "narrate": { "$ref": "common.schema.json#/$defs/text" },
+        "id": { "type": "string" },
+        "voice": { "type": ["string", "null"], "description": "'auto', a voice asset id, or null." }
+      },
+      "additionalProperties": true
+    },
+    "cmd_bg": {
+      "type": "object",
+      "required": ["bg"],
+      "properties": {
+        "bg": { "oneOf": [{ "$ref": "common.schema.json#/$defs/id" }, { "type": "null" }] },
+        "transition": { "$ref": "#/$defs/tr" },
+        "camera": {
+          "type": "object",
+          "properties": {
+            "zoom": { "type": "number", "exclusiveMinimum": 0 },
+            "x": { "type": "number" },
+            "y": { "type": "number" },
+            "duration": { "type": "integer", "minimum": 0 }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": true
+    },
+    "cmd_show": {
+      "type": "object",
+      "required": ["show"],
+      "properties": {
+        "show": { "$ref": "common.schema.json#/$defs/id" },
+        "at": { "$ref": "common.schema.json#/$defs/position" },
+        "outfit": { "$ref": "common.schema.json#/$defs/id" },
+        "pose": { "$ref": "common.schema.json#/$defs/id" },
+        "face": { "$ref": "common.schema.json#/$defs/id" },
+        "transition": { "$ref": "#/$defs/tr" }
+      },
+      "additionalProperties": true
+    },
+    "cmd_hide": {
+      "type": "object",
+      "required": ["hide"],
+      "properties": {
+        "hide": { "$ref": "common.schema.json#/$defs/id", "description": "Character id, or the reserved 'all' to clear the stage." },
+        "transition": { "$ref": "#/$defs/tr" }
+      },
+      "additionalProperties": true
+    },
+    "cmd_move": {
+      "type": "object",
+      "required": ["move", "to"],
+      "properties": {
+        "move": { "$ref": "common.schema.json#/$defs/id" },
+        "to": { "$ref": "common.schema.json#/$defs/position" },
+        "transition": { "$ref": "#/$defs/tr" }
+      },
+      "additionalProperties": true
+    },
+    "cmd_face": {
+      "type": "object",
+      "required": ["face", "to"],
+      "properties": {
+        "face": { "$ref": "common.schema.json#/$defs/id" },
+        "to": { "$ref": "common.schema.json#/$defs/id" },
+        "transition": { "$ref": "#/$defs/tr" }
+      },
+      "additionalProperties": true
+    },
+    "cmd_outfit": {
+      "type": "object",
+      "required": ["outfit", "to"],
+      "properties": {
+        "outfit": { "$ref": "common.schema.json#/$defs/id" },
+        "to": { "$ref": "common.schema.json#/$defs/id" },
+        "pose": { "$ref": "common.schema.json#/$defs/id" },
+        "transition": { "$ref": "#/$defs/tr" }
+      },
+      "additionalProperties": true
+    },
+    "cmd_cg": {
+      "type": "object",
+      "required": ["cg"],
+      "properties": {
+        "cg": { "oneOf": [{ "$ref": "common.schema.json#/$defs/id" }, { "type": "null" }] },
+        "transition": { "$ref": "#/$defs/tr" }
+      },
+      "additionalProperties": true
+    },
+    "cmd_closeup": {
+      "type": "object",
+      "required": ["closeup"],
+      "properties": {
+        "closeup": { "oneOf": [{ "$ref": "common.schema.json#/$defs/id" }, { "type": "null" }] },
+        "caption": { "$ref": "common.schema.json#/$defs/text" },
+        "zoom": { "type": "number", "exclusiveMinimum": 0 },
+        "pan": {
+          "type": "object",
+          "properties": { "x": { "type": "number" }, "y": { "type": "number" } },
+          "additionalProperties": false
+        },
+        "dim": { "type": "number", "minimum": 0, "maximum": 1 },
+        "transition": { "$ref": "#/$defs/tr" }
+      },
+      "additionalProperties": true
+    },
+    "cmd_bgm": {
+      "type": "object",
+      "required": ["bgm"],
+      "properties": {
+        "bgm": { "type": ["string", "null"], "description": "Bgm asset id, the reserved 'stop', or null to stop." },
+        "fade": { "type": "integer", "minimum": 0 },
+        "loop": { "type": "boolean" },
+        "volume": { "type": "number", "minimum": 0, "maximum": 1 }
+      },
+      "additionalProperties": true
+    },
+    "cmd_se": {
+      "type": "object",
+      "required": ["se"],
+      "properties": {
+        "se": { "$ref": "common.schema.json#/$defs/id" },
+        "volume": { "type": "number", "minimum": 0, "maximum": 1 },
+        "wait": { "type": "boolean" }
+      },
+      "additionalProperties": true
+    },
+    "cmd_voice": {
+      "type": "object",
+      "required": ["voice"],
+      "properties": {
+        "voice": { "type": "string", "description": "Voice asset id, or the reserved 'stop'." }
+      },
+      "additionalProperties": true
+    },
+    "cmd_shake": {
+      "type": "object",
+      "required": ["shake"],
+      "properties": {
+        "shake": {
+          "type": "object",
+          "properties": {
+            "intensity": { "enum": ["light", "medium", "heavy"] },
+            "duration": { "type": "integer", "minimum": 0 }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": true
+    },
+    "cmd_flash": {
+      "type": "object",
+      "required": ["flash"],
+      "properties": {
+        "flash": {
+          "type": "object",
+          "properties": {
+            "color": { "$ref": "common.schema.json#/$defs/color" },
+            "duration": { "type": "integer", "minimum": 0 }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": true
+    },
+    "cmd_wait": {
+      "type": "object",
+      "required": ["wait"],
+      "properties": {
+        "wait": { "oneOf": [{ "type": "integer", "minimum": 0 }, { "const": "click" }] }
+      },
+      "additionalProperties": true
+    },
+    "cmd_choice": {
+      "type": "object",
+      "required": ["options"],
+      "properties": {
+        "choice": { "$ref": "common.schema.json#/$defs/text" },
+        "id": { "type": "string" },
+        "options": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 8,
+          "items": {
+            "type": "object",
+            "required": ["text"],
+            "properties": {
+              "text": { "$ref": "common.schema.json#/$defs/text" },
+              "if": { "$ref": "common.schema.json#/$defs/condition" },
+              "hideIfFalse": { "type": "boolean" },
+              "set": { "$ref": "common.schema.json#/$defs/assignments" },
+              "do": { "type": "array", "items": { "$ref": "#/$defs/command" } },
+              "jump": { "$ref": "common.schema.json#/$defs/jumpTarget" }
+            },
+            "additionalProperties": true
+          }
+        }
+      },
+      "additionalProperties": true
+    },
+    "cmd_set": {
+      "type": "object",
+      "required": ["set"],
+      "properties": { "set": { "$ref": "common.schema.json#/$defs/assignments" } },
+      "additionalProperties": true
+    },
+    "cmd_if": {
+      "type": "object",
+      "required": ["if", "then"],
+      "properties": {
+        "if": { "$ref": "common.schema.json#/$defs/condition" },
+        "then": { "type": "array", "items": { "$ref": "#/$defs/command" } },
+        "elif": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["if", "then"],
+            "properties": {
+              "if": { "$ref": "common.schema.json#/$defs/condition" },
+              "then": { "type": "array", "items": { "$ref": "#/$defs/command" } }
+            },
+            "additionalProperties": false
+          }
+        },
+        "else": { "type": "array", "items": { "$ref": "#/$defs/command" } }
+      },
+      "additionalProperties": true
+    },
+    "cmd_label": {
+      "type": "object",
+      "required": ["label"],
+      "properties": { "label": { "$ref": "common.schema.json#/$defs/id" } },
+      "additionalProperties": true
+    },
+    "cmd_jump": {
+      "type": "object",
+      "required": ["jump"],
+      "properties": { "jump": { "$ref": "common.schema.json#/$defs/jumpTarget" } },
+      "additionalProperties": true
+    },
+    "cmd_call": {
+      "type": "object",
+      "required": ["call"],
+      "properties": { "call": { "$ref": "common.schema.json#/$defs/jumpTarget" } },
+      "additionalProperties": true
+    },
+    "cmd_return": {
+      "type": "object",
+      "required": ["return"],
+      "properties": { "return": { "const": true } },
+      "additionalProperties": true
+    },
+    "cmd_end": {
+      "type": "object",
+      "required": ["end"],
+      "properties": {
+        "end": { "oneOf": [{ "$ref": "common.schema.json#/$defs/id" }, { "type": "boolean" }] }
+      },
+      "additionalProperties": true
+    }
+  }
+}
