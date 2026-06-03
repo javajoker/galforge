@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>GalForge — reference runtime</title>
+  <link rel="stylesheet" href="galforge.css" />
+</head>
+<body>
+  <div id="gf-frame">
+    <div id="gf-stage">
+      <div id="gf-bg" class="gf-bg"></div>
+      <div id="gf-sprites"></div>
+      <div id="gf-cg" class="gf-overlay hidden"></div>
+      <div id="gf-closeup" class="gf-overlay hidden">
+        <div id="gf-closeup-img" class="gf-closeup-img"></div>
+        <div id="gf-closeup-cap" class="gf-closeup-cap"></div>
+      </div>
+      <div id="gf-flash" class="gf-flash"></div>
+      <div id="gf-hud"><span id="gf-bgm-hud"></span></div>
+
+    <div id="gf-dialogue" class="hidden">
+      <div id="gf-name" class="gf-name"></div>
+      <div id="gf-text" class="gf-text"></div>
+      <div id="gf-advance" class="gf-advance">▼</div>
+    </div>
+
+    <div id="gf-choices" class="gf-choices hidden"></div>
+
+    <div id="gf-controls">
+      <button data-act="auto" title="Auto-advance">Auto</button>
+      <button data-act="skip" title="Skip">Skip</button>
+      <button data-act="backlog" title="History">Log</button>
+      <button data-act="save" title="Save">Save</button>
+      <button data-act="load" title="Load">Load</button>
+      <select id="gf-lang" title="Language"></select>
+    </div>
+
+    <div id="gf-backlog" class="gf-panel hidden">
+      <header>Backlog <button data-act="close-backlog">✕</button></header>
+      <div id="gf-backlog-list"></div>
+    </div>
+
+    <div id="gf-saves" class="gf-panel hidden">
+      <header><span id="gf-saves-title">Save</span> <button data-act="close-saves">✕</button></header>
+      <div id="gf-saves-list"></div>
+    </div>
+
+    <div id="gf-ending" class="gf-ending hidden">
+      <div class="gf-ending-card">
+        <div id="gf-ending-title"></div>
+        <div class="gf-ending-sub">— end —</div>
+        <button data-act="restart">Restart</button>
+      </div>
+    </div>
+
+    <div id="gf-boot" class="gf-boot">
+      <div class="gf-boot-card">
+        <h1>GalForge</h1>
+        <p class="gf-boot-sub">reference GVNF runtime</p>
+        <div id="gf-boot-msg">Loading…</div>
+      </div>
+    </div>
+    </div><!-- /gf-stage -->
+  </div>
+
+  <script src="galforge.js"></script>
+  <script>
+    // Project dir via ?game=<path>; defaults to the bundled dry-run sample.
+    const params = new URLSearchParams(location.search);
+    const dir = params.get('game') || '../games/umbrella-share';
+    GalForge.boot(document.getElementById('gf-frame'), dir);
+  </script>
+</body>
+</html>
