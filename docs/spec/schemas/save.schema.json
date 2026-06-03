@@ -1,0 +1,79 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://galforge.dev/schemas/1.0/save.schema.json",
+  "title": "GVNF save snapshot",
+  "description": "Fully determines resumed playback. See script-standard §11.",
+  "type": "object",
+  "required": ["gvnf", "game", "pc", "variables", "stage"],
+  "properties": {
+    "gvnf": { "$ref": "common.schema.json#/$defs/version" },
+    "game": { "$ref": "common.schema.json#/$defs/id" },
+    "gameVersion": { "type": "string" },
+    "savedAt": { "type": "string", "format": "date-time" },
+    "locale": { "type": "string" },
+    "pc": {
+      "type": "object",
+      "required": ["scene", "index"],
+      "properties": {
+        "scene": { "$ref": "common.schema.json#/$defs/id" },
+        "index": { "type": "integer", "minimum": 0 }
+      },
+      "additionalProperties": false
+    },
+    "callStack": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["scene", "index"],
+        "properties": {
+          "scene": { "$ref": "common.schema.json#/$defs/id" },
+          "index": { "type": "integer", "minimum": 0 }
+        },
+        "additionalProperties": false
+      }
+    },
+    "variables": {
+      "type": "object",
+      "additionalProperties": { "type": ["boolean", "number", "string"] }
+    },
+    "stage": {
+      "type": "object",
+      "required": ["visible"],
+      "properties": {
+        "mode": { "enum": ["auto", "manual"] },
+        "lastSpeaker": { "oneOf": [{ "$ref": "common.schema.json#/$defs/id" }, { "type": "null" }] },
+        "active": { "oneOf": [{ "$ref": "common.schema.json#/$defs/id" }, { "type": "null" }] },
+        "visible": {
+          "type": "array",
+          "maxItems": 2,
+          "items": {
+            "type": "object",
+            "required": ["char", "slot"],
+            "properties": {
+              "char": { "$ref": "common.schema.json#/$defs/id" },
+              "slot": { "$ref": "common.schema.json#/$defs/position" },
+              "outfit": { "$ref": "common.schema.json#/$defs/id" },
+              "pose": { "$ref": "common.schema.json#/$defs/id" },
+              "face": { "$ref": "common.schema.json#/$defs/id" }
+            },
+            "additionalProperties": false
+          }
+        },
+        "bg": { "oneOf": [{ "$ref": "common.schema.json#/$defs/id" }, { "type": "null" }] },
+        "cg": { "oneOf": [{ "$ref": "common.schema.json#/$defs/id" }, { "type": "null" }] },
+        "closeup": { "oneOf": [{ "$ref": "common.schema.json#/$defs/id" }, { "type": "null" }] }
+      },
+      "additionalProperties": true
+    },
+    "audio": {
+      "type": "object",
+      "properties": {
+        "bgm": { "oneOf": [{ "$ref": "common.schema.json#/$defs/id" }, { "type": "null" }] },
+        "bgmPositionMs": { "type": "integer", "minimum": 0 }
+      },
+      "additionalProperties": false
+    },
+    "backlogCursor": { "type": "integer", "minimum": 0 }
+  },
+  "additionalProperties": true
+}

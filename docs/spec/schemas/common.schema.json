@@ -1,0 +1,63 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://galforge.dev/schemas/1.0/common.schema.json",
+  "title": "GVNF common definitions",
+  "description": "Shared $defs reused across GVNF schemas (GalForge Visual-Novel Format v1.0).",
+  "$defs": {
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9_]*$",
+      "description": "Lower snake_case identifier."
+    },
+    "version": {
+      "const": "1.0",
+      "description": "GVNF spec version."
+    },
+    "color": {
+      "type": "string",
+      "pattern": "^#([0-9a-fA-F]{6}|[0-9a-fA-F]{8})$"
+    },
+    "position": {
+      "enum": ["left", "center", "right"],
+      "description": "Stage slot. At most two characters visible at once (script-standard §6)."
+    },
+    "text": {
+      "type": "string",
+      "description": "Displayable text. A leading '@' marks an i18n key (e.g. '@s01.aoi.001'); '@@' escapes a literal '@'; any other string is inline literal prose."
+    },
+    "transition": {
+      "description": "A transition effect (script-standard §7). A bare string is sugar for { type: <string> }.",
+      "oneOf": [
+        { "type": "string" },
+        {
+          "type": "object",
+          "properties": {
+            "type": { "type": "string" },
+            "duration": { "type": "integer", "minimum": 0 },
+            "easing": { "enum": ["linear", "easeIn", "easeOut", "easeInOut"] },
+            "color": { "$ref": "#/$defs/color" },
+            "direction": { "enum": ["left", "right", "up", "down"] }
+          },
+          "required": ["type"],
+          "additionalProperties": false
+        }
+      ]
+    },
+    "assignments": {
+      "type": "object",
+      "description": "Variable assignments. Value: literal (bool/number/string), relative ('+2'/'-1'), or expression ('=expr').",
+      "additionalProperties": {
+        "type": ["boolean", "number", "string"]
+      },
+      "propertyNames": { "$ref": "#/$defs/id" }
+    },
+    "condition": {
+      "type": "string",
+      "description": "Safe expression (script-standard §9.3), e.g. 'aoi_affection >= 5 && met_rin'."
+    },
+    "jumpTarget": {
+      "type": "string",
+      "description": "Scene id ('s02'), in-scene label ('#join'), or scene+label ('s02#intro')."
+    }
+  }
+}

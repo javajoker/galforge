@@ -1,0 +1,10 @@
+{
+  "gvnf": "1.0",
+  "id": "yuu",
+  "name": "@char.yuu.name",
+  "nameColor": "#cccccc",
+  "sprite": null,
+  "voice": { "default": null },
+  "tags": ["protagonist"],
+  "_note": "Player-character. No on-screen sprite: lines render a nameplate but place nothing on the stage. Demonstrates a speaker without art (script-standard §5)."
+}

@@ -1,0 +1,50 @@
+{
+  "gvnf": "1.0",
+  "locale": "en",
+  "strings": {
+    "game.title": "The Umbrella We Shared",
+
+    "char.yuuto.name": "Yuuto",
+    "char.nao.name": "Nao",
+    "char.shizuku.name": "Shizuku",
+    "char.rui.name": "Rui",
+
+    "ending.nao_end.title": "Disaster Twins",
+    "ending.shizuku_end.title": "Not Lucky, Only Dry",
+
+    "s01.intro": "The rain came down like it had a grudge. I stood under the dripping eave of the bus stop, bag over my head as if that would help, and watched the last bus pull away without me. The timetable and I had never been on speaking terms.",
+    "s01.nao.002": "You missed it too, huh? Twins — we're disaster twins now.",
+    "s01.yuuto.003": "“I prefer ‘unlucky acquaintances.’”",
+    "s01.nao.004": "Boring.",
+    "s01.thunder": "Thunder cracked somewhere over the hills, and for half a second her grin slipped into something startled — before snapping right back.",
+    "s01.shizuku.006": "…The next bus isn't for forty minutes. If you're counting on it.",
+    "s01.yuuto.007": "A voice from the far end of the bench. I hadn't even noticed her sitting there.",
+    "s01.nao.008": "See? This one's got the timetable memorized. Hey, Shizuku — share mine when it clears? Yellow's lucky.",
+    "s01.rui.009": "Nao! There you are! Coach is going to kill us — the meet got moved up—",
+    "s01.rui.010": "Oh. Sorry. Am I interrupting a thing?",
+    "s01.bothspeak": "“There's no thing,” Shizuku said — at the exact moment Nao said, “Total thing.”",
+    "s01.rui.011": "Tell me later! We have to go — the bus on Maple still runs—",
+    "s01.nao.012": "Catch you tomorrow, disaster twin!",
+    "s01.gone": "And then they were gone, yellow umbrella popping open over both of them — just me, Shizuku, the rain, and forty minutes.",
+    "s01.charm": "Something glinted on the bench where Nao had been sitting. I picked it up. It was warm.",
+    "s01.charm.caption": "A little brass charm shaped like a bus, its ring snapped open. Fallen off Nao's bag, probably.",
+    "s01.shizuku.013": "She's always losing things.",
+    "s01.shizuku.014": "…Do you want to wait? It's a long forty minutes alone. I have an umbrella too. It's not lucky. But it's dry.",
+    "s01.yuuto.015": "Forty minutes. A charm to return. A quiet voice, or a loud one. I had to decide which rain to walk into.",
+
+    "choice.umbrella.prompt": "Which rain do I walk into?",
+    "choice.umbrella.chase": "Run after the yellow umbrella.",
+    "choice.umbrella.wait": "Stay, and wait with Shizuku.",
+
+    "s01.yuuto.chase": "“Wait — Nao! You dropped something!” I bolted out into the downpour after the yellow umbrella.",
+    "s01.yuuto.wait": "“…Yeah,” I said, and sat down on the dry end of the bench. “A long forty minutes sounds about right.”",
+    "s01.shizuku.wait": "Good. …I'll hold the umbrella, then. You hold the charm.",
+
+    "s02.intro": "By the time the rain thinned, the streetlights had come on, smearing gold across the wet road.",
+    "s02.nao.cg": "I caught her at the Maple stop, both of us soaked, the yellow umbrella barely covering two heads.",
+    "s02.nao.001": "You ran all this way to give me back a charm? …Okay, disaster twin. Tomorrow. You're buying me a hot can of something.",
+    "s02.shizuku.intro": "She shook out her umbrella and peeled off the rain-dark blazer, folding it over her arm.",
+    "s02.shizuku.002": "…Thank you. For staying. The quiet's easier when it's shared. Walk me to the next stop?",
+    "s02.shizuku.cg": "We stepped out under one umbrella that wasn't lucky, only dry — and somehow that was better."
+  }
+}

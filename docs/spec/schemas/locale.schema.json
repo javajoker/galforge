@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://galforge.dev/schemas/1.0/locale.schema.json",
+  "title": "GVNF locale string table (i18n/<locale>.json)",
+  "description": "Per-locale string table keyed by i18n key. See script-standard §4.",
+  "type": "object",
+  "required": ["gvnf", "locale", "strings"],
+  "properties": {
+    "gvnf": { "$ref": "common.schema.json#/$defs/version" },
+    "locale": { "type": "string" },
+    "strings": {
+      "type": "object",
+      "description": "i18n key -> string. Keys may be dotted or nested objects of strings.",
+      "additionalProperties": {
+        "$ref": "#/$defs/stringOrNested"
+      }
+    }
+  },
+  "additionalProperties": true,
+  "$defs": {
+    "stringOrNested": {
+      "oneOf": [
+        { "type": "string" },
+        {
+          "type": "object",
+          "additionalProperties": { "$ref": "#/$defs/stringOrNested" }
+        }
+      ]
+    }
+  }
+}

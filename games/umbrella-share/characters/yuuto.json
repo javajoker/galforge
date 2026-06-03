@@ -1,0 +1,9 @@
+{
+  "gvnf": "1.0",
+  "id": "yuuto",
+  "name": "@char.yuuto.name",
+  "nameColor": "#bcbcbc",
+  "sprite": null,
+  "voice": { "default": null },
+  "tags": ["protagonist"]
+}

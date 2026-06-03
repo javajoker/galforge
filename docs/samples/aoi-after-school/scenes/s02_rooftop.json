@@ -1,0 +1,29 @@
+{
+  "gvnf": "1.0",
+  "id": "s02_rooftop",
+  "stageMode": "auto",
+  "cast": ["aoi", "yuu"],
+  "_note": "Branches on the `route` variable set by the choice in s01. Demonstrates a CG, an outfit change (uniform -> casual), and two endings.",
+  "script": [
+    { "bg": "rooftop_sunset", "transition": { "type": "fade", "duration": 1000 } },
+    { "bgm": "tender", "fade": 1000 },
+    { "narrate": "@s02.intro" },
+
+    { "if": "route == 'aoi'",
+      "then": [
+        { "cg": "cg_first_meeting", "transition": "fade" },
+        { "narrate": "@s02.cg_note" },
+        { "cg": null },
+        { "show": "aoi", "at": "center", "outfit": "casual", "face": "smile", "transition": "dissolve" },
+        { "say": "aoi", "id": "s02_001", "text": "@s02.aoi.good", "face": "smile" },
+        { "flash": { "color": "#ffffff", "duration": 150 } },
+        { "end": "good" }
+      ],
+      "else": [
+        { "show": "aoi", "at": "center", "outfit": "uniform", "face": "neutral", "transition": "dissolve" },
+        { "say": "aoi", "id": "s02_002", "text": "@s02.aoi.normal", "face": "sad" },
+        { "end": "normal" }
+      ]
+    }
+  ]
+}

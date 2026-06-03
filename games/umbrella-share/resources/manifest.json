@@ -1,0 +1,82 @@
+{
+  "gvnf": "1.0",
+  "_note": "Work-order for art/voice. Paths illustrative; no binaries shipped in this dry-run.",
+
+  "backgrounds": {
+    "busstop_rain":   { "path": "bg/busstop_rain.webp",   "w": 1920, "h": 1080 },
+    "street_evening": { "path": "bg/street_evening.webp", "w": 1920, "h": 1080 }
+  },
+
+  "cg": {
+    "cg_cover":           { "path": "cg/cover.webp",           "w": 1920, "h": 1080, "tags": ["gallery"] },
+    "cg_yellow_umbrella": { "path": "cg/yellow_umbrella.webp", "w": 1920, "h": 1080, "tags": ["event", "gallery"] },
+    "cg_shared_shelter":  { "path": "cg/shared_shelter.webp",  "w": 1920, "h": 1080, "tags": ["event", "gallery"] }
+  },
+
+  "items": {
+    "bus_charm": { "path": "item/bus_charm.png", "w": 700, "h": 700 }
+  },
+
+  "ui": {
+    "namebox": { "path": "ui/namebox.png" },
+    "textbox": { "path": "ui/textbox.png" }
+  },
+
+  "sprites": {
+    "nao": {
+      "anchor": { "x": 0.5, "y": 1.0 },
+      "baseScale": 1.0,
+      "bodies": {
+        "uniform": { "stand": { "path": "char/nao/body/uniform_stand.png", "w": 700, "h": 1500 } }
+      },
+      "faces": {
+        "neutral":   { "path": "char/nao/face/neutral.png",   "w": 300, "h": 320, "offset": { "x": 0, "y": 120 } },
+        "smile":     { "path": "char/nao/face/smile.png",     "w": 300, "h": 320, "offset": { "x": 0, "y": 120 } },
+        "grin":      { "path": "char/nao/face/grin.png",      "w": 300, "h": 320, "offset": { "x": 0, "y": 120 } },
+        "surprised": { "path": "char/nao/face/surprised.png", "w": 300, "h": 320, "offset": { "x": 0, "y": 120 } },
+        "pout":      { "path": "char/nao/face/pout.png",      "w": 300, "h": 320, "offset": { "x": 0, "y": 120 } }
+      }
+    },
+    "shizuku": {
+      "anchor": { "x": 0.5, "y": 1.0 },
+      "baseScale": 1.0,
+      "bodies": {
+        "uniform": { "stand": { "path": "char/shizuku/body/uniform_stand.png", "w": 700, "h": 1500 } },
+        "casual":  { "stand": { "path": "char/shizuku/body/casual_stand.png",  "w": 700, "h": 1500 } }
+      },
+      "faces": {
+        "neutral":   { "path": "char/shizuku/face/neutral.png",   "w": 300, "h": 320, "offset": { "x": 0, "y": 120 } },
+        "smile":     { "path": "char/shizuku/face/smile.png",     "w": 300, "h": 320, "offset": { "x": 0, "y": 120 } },
+        "blush":     { "path": "char/shizuku/face/blush.png",     "w": 300, "h": 320, "offset": { "x": 0, "y": 120 } },
+        "sad":       { "path": "char/shizuku/face/sad.png",       "w": 300, "h": 320, "offset": { "x": 0, "y": 120 } },
+        "surprised": { "path": "char/shizuku/face/surprised.png", "w": 300, "h": 320, "offset": { "x": 0, "y": 120 } }
+      }
+    },
+    "rui": {
+      "anchor": { "x": 0.5, "y": 1.0 },
+      "baseScale": 1.0,
+      "bodies": {
+        "uniform": { "stand": { "path": "char/rui/body/uniform_stand.png", "w": 700, "h": 1500 } }
+      },
+      "faces": {
+        "neutral":   { "path": "char/rui/face/neutral.png",   "w": 300, "h": 320, "offset": { "x": 0, "y": 120 } },
+        "surprised": { "path": "char/rui/face/surprised.png", "w": 300, "h": 320, "offset": { "x": 0, "y": 120 } },
+        "grin":      { "path": "char/rui/face/grin.png",      "w": 300, "h": 320, "offset": { "x": 0, "y": 120 } }
+      }
+    }
+  },
+
+  "bgm": {
+    "rain_theme": { "path": "bgm/rain_theme.ogg", "loop": true, "loopStart": 1800, "loopEnd": 88000 },
+    "tender":     { "path": "bgm/tender.ogg",     "loop": true }
+  },
+
+  "se": {
+    "thunder": { "path": "se/thunder.ogg" }
+  },
+
+  "voice": {
+    "nao/s01_002":     { "path": "voice/en/nao/s01_002.ogg",     "locale": "en", "char": "nao" },
+    "shizuku/s01_006": { "path": "voice/en/shizuku/s01_006.ogg", "locale": "en", "char": "shizuku" }
+  }
+}

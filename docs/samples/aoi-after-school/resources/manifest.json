@@ -1,0 +1,90 @@
+{
+  "gvnf": "1.0",
+  "_note": "Single source of truth for every asset. Paths are illustrative; this sample ships no binaries. This file doubles as the asset work-order for an art/voice pipeline.",
+
+  "backgrounds": {
+    "classroom_sunset": { "path": "bg/classroom_sunset.webp", "w": 1920, "h": 1080 },
+    "rooftop_sunset":   { "path": "bg/rooftop_sunset.webp",   "w": 1920, "h": 1080 }
+  },
+
+  "cg": {
+    "cg_cover":         { "path": "cg/cover.webp",         "w": 1920, "h": 1080, "tags": ["gallery"] },
+    "cg_first_meeting": { "path": "cg/first_meeting.webp", "w": 1920, "h": 1080, "tags": ["event", "gallery"] }
+  },
+
+  "items": {
+    "class_key": { "path": "item/class_key.png", "w": 800, "h": 800 }
+  },
+
+  "ui": {
+    "namebox": { "path": "ui/namebox.png" },
+    "textbox": { "path": "ui/textbox.png" }
+  },
+
+  "sprites": {
+    "aoi": {
+      "anchor": { "x": 0.5, "y": 1.0 },
+      "baseScale": 1.0,
+      "bodies": {
+        "uniform": {
+          "stand": { "path": "char/aoi/body/uniform_stand.png", "w": 700, "h": 1500 }
+        },
+        "casual": {
+          "stand": { "path": "char/aoi/body/casual_stand.png", "w": 700, "h": 1500 }
+        }
+      },
+      "faces": {
+        "neutral":   { "path": "char/aoi/face/neutral.png",   "w": 300, "h": 320, "offset": { "x": 0, "y": 120 } },
+        "smile":     { "path": "char/aoi/face/smile.png",     "w": 300, "h": 320, "offset": { "x": 0, "y": 120 } },
+        "blush":     { "path": "char/aoi/face/blush.png",     "w": 300, "h": 320, "offset": { "x": 0, "y": 120 } },
+        "sad":       { "path": "char/aoi/face/sad.png",       "w": 300, "h": 320, "offset": { "x": 0, "y": 120 } },
+        "surprised": { "path": "char/aoi/face/surprised.png", "w": 300, "h": 320, "offset": { "x": 0, "y": 120 } }
+      }
+    },
+    "rin": {
+      "anchor": { "x": 0.5, "y": 1.0 },
+      "baseScale": 1.0,
+      "bodies": {
+        "uniform": {
+          "stand": { "path": "char/rin/body/uniform_stand.png", "w": 700, "h": 1500 }
+        }
+      },
+      "faces": {
+        "neutral": { "path": "char/rin/face/neutral.png", "w": 300, "h": 320, "offset": { "x": 0, "y": 120 } },
+        "smile":   { "path": "char/rin/face/smile.png",   "w": 300, "h": 320, "offset": { "x": 0, "y": 120 } },
+        "pout":    { "path": "char/rin/face/pout.png",    "w": 300, "h": 320, "offset": { "x": 0, "y": 120 } }
+      }
+    },
+    "mei": {
+      "anchor": { "x": 0.5, "y": 1.0 },
+      "baseScale": 1.0,
+      "bodies": {
+        "uniform": {
+          "stand": { "path": "char/mei/body/uniform_stand.png", "w": 700, "h": 1500 }
+        }
+      },
+      "faces": {
+        "neutral":   { "path": "char/mei/face/neutral.png",   "w": 300, "h": 320, "offset": { "x": 0, "y": 120 } },
+        "smile":     { "path": "char/mei/face/smile.png",     "w": 300, "h": 320, "offset": { "x": 0, "y": 120 } },
+        "surprised": { "path": "char/mei/face/surprised.png", "w": 300, "h": 320, "offset": { "x": 0, "y": 120 } }
+      }
+    }
+  },
+
+  "bgm": {
+    "school_theme": { "path": "bgm/school_theme.ogg", "loop": true, "loopStart": 2300, "loopEnd": 96000 },
+    "tender":       { "path": "bgm/tender.ogg",       "loop": true }
+  },
+
+  "se": {
+    "door":      { "path": "se/door_slide.ogg" },
+    "heartbeat": { "path": "se/heartbeat.ogg" }
+  },
+
+  "voice": {
+    "aoi/s01_001":     { "path": "voice/en/aoi/s01_001.ogg", "locale": "en", "char": "aoi" },
+    "aoi/s01_001@ja":  { "path": "voice/ja/aoi/s01_001.ogg", "locale": "ja", "char": "aoi" },
+    "rin/s01_004":     { "path": "voice/en/rin/s01_004.ogg", "locale": "en", "char": "rin" },
+    "rin/s01_004@ja":  { "path": "voice/ja/rin/s01_004.ogg", "locale": "ja", "char": "rin" }
+  }
+}

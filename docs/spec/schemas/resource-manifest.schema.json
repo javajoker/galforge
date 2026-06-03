@@ -1,0 +1,143 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://galforge.dev/schemas/1.0/resource-manifest.schema.json",
+  "title": "GVNF resource manifest (resources/manifest.json)",
+  "description": "Single source of truth for all assets. See script-standard §3.",
+  "type": "object",
+  "required": ["gvnf"],
+  "properties": {
+    "gvnf": { "$ref": "common.schema.json#/$defs/version" },
+    "backgrounds": { "$ref": "#/$defs/imageMap" },
+    "cg": { "$ref": "#/$defs/imageMap" },
+    "items": { "$ref": "#/$defs/imageMap" },
+    "ui": { "$ref": "#/$defs/imageMap" },
+    "sprites": {
+      "type": "object",
+      "additionalProperties": { "$ref": "#/$defs/spriteSet" },
+      "propertyNames": { "$ref": "common.schema.json#/$defs/id" }
+    },
+    "bgm": {
+      "type": "object",
+      "additionalProperties": { "$ref": "#/$defs/bgmAsset" },
+      "propertyNames": { "$ref": "common.schema.json#/$defs/id" }
+    },
+    "se": {
+      "type": "object",
+      "additionalProperties": { "$ref": "#/$defs/audioAsset" },
+      "propertyNames": { "$ref": "common.schema.json#/$defs/id" }
+    },
+    "voice": {
+      "type": "object",
+      "description": "Voice clips. Keys are free-form (convention '{speaker}/{line}', per-locale '...@{locale}').",
+      "additionalProperties": { "$ref": "#/$defs/voiceAsset" }
+    }
+  },
+  "additionalProperties": true,
+  "$defs": {
+    "imageAsset": {
+      "type": "object",
+      "required": ["path"],
+      "properties": {
+        "path": { "type": "string" },
+        "w": { "type": "integer", "minimum": 1 },
+        "h": { "type": "integer", "minimum": 1 },
+        "tags": { "type": "array", "items": { "type": "string" } },
+        "_note": { "type": "string" }
+      },
+      "additionalProperties": true
+    },
+    "imageMap": {
+      "type": "object",
+      "additionalProperties": { "$ref": "#/$defs/imageAsset" },
+      "propertyNames": { "$ref": "common.schema.json#/$defs/id" }
+    },
+    "spriteSet": {
+      "type": "object",
+      "required": ["bodies"],
+      "properties": {
+        "anchor": {
+          "type": "object",
+          "properties": {
+            "x": { "type": "number" },
+            "y": { "type": "number" }
+          },
+          "additionalProperties": false
+        },
+        "baseScale": { "type": "number", "exclusiveMinimum": 0 },
+        "bodies": {
+          "type": "object",
+          "description": "outfit id -> { pose id -> image }.",
+          "minProperties": 1,
+          "additionalProperties": {
+            "type": "object",
+            "minProperties": 1,
+            "additionalProperties": { "$ref": "#/$defs/spriteLayer" },
+            "propertyNames": { "$ref": "common.schema.json#/$defs/id" }
+          },
+          "propertyNames": { "$ref": "common.schema.json#/$defs/id" }
+        },
+        "faces": {
+          "type": "object",
+          "description": "expression id -> face image.",
+          "additionalProperties": { "$ref": "#/$defs/spriteLayer" },
+          "propertyNames": { "$ref": "common.schema.json#/$defs/id" }
+        }
+      },
+      "additionalProperties": true
+    },
+    "spriteLayer": {
+      "type": "object",
+      "required": ["path"],
+      "properties": {
+        "path": { "type": "string" },
+        "w": { "type": "integer", "minimum": 1 },
+        "h": { "type": "integer", "minimum": 1 },
+        "offset": {
+          "type": "object",
+          "properties": { "x": { "type": "number" }, "y": { "type": "number" } },
+          "additionalProperties": false
+        },
+        "variants": {
+          "type": "object",
+          "additionalProperties": { "$ref": "#/$defs/spriteLayer" }
+        },
+        "_note": { "type": "string" }
+      },
+      "additionalProperties": true
+    },
+    "audioAsset": {
+      "type": "object",
+      "required": ["path"],
+      "properties": {
+        "path": { "type": "string" },
+        "tags": { "type": "array", "items": { "type": "string" } },
+        "_note": { "type": "string" }
+      },
+      "additionalProperties": true
+    },
+    "bgmAsset": {
+      "type": "object",
+      "required": ["path"],
+      "properties": {
+        "path": { "type": "string" },
+        "loop": { "type": "boolean" },
+        "loopStart": { "type": "integer", "minimum": 0 },
+        "loopEnd": { "type": "integer", "minimum": 0 },
+        "tags": { "type": "array", "items": { "type": "string" } },
+        "_note": { "type": "string" }
+      },
+      "additionalProperties": true
+    },
+    "voiceAsset": {
+      "type": "object",
+      "required": ["path"],
+      "properties": {
+        "path": { "type": "string" },
+        "locale": { "type": "string" },
+        "char": { "$ref": "common.schema.json#/$defs/id" },
+        "_note": { "type": "string" }
+      },
+      "additionalProperties": true
+    }
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "gvnf": "1.0",
+  "id": "mei",
+  "name": "@char.mei.name",
+  "nameColor": "#7bbf6a",
+  "sprite": "mei",
+  "defaultOutfit": "uniform",
+  "defaultPose": "stand",
+  "defaultFace": "neutral",
+  "defaultPosition": "right",
+  "voice": { "default": null },
+  "tags": ["council"]
+}

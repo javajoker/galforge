@@ -1,0 +1,30 @@
+{
+  "gvnf": "1.0",
+  "id": "aoi_after_school",
+  "title": "@game.title",
+  "version": "1.0.0",
+  "authors": ["GalForge Sample Team"],
+  "screen": { "width": 1920, "height": 1080 },
+  "locales": { "default": "en", "supported": ["en", "ja"] },
+  "entry": "s01_classroom",
+  "voicePattern": "{speaker}/{line}",
+  "text": { "speed": "normal", "autoDelayMs": 1200 },
+  "audio": { "bgm": 0.8, "se": 0.9, "voice": 1.0 },
+  "stage": { "mode": "auto", "emphasis": { "dim": 0.55, "offsetY": 0, "narration": "keep" } },
+  "transitions": { "bg": "dissolve", "char": "dissolve", "cg": "fade" },
+  "variables": {
+    "aoi_affection": 0,
+    "rin_affection": 0,
+    "met_rin": false,
+    "route": "common"
+  },
+  "endings": {
+    "good": { "title": "@ending.good.title" },
+    "normal": { "title": "@ending.normal.title" }
+  },
+  "meta": {
+    "cover": "cg_cover",
+    "rating": "all-ages",
+    "description": "A short sample that exercises every GVNF v1.0 feature: layered sprites, expression & outfit changes, the two-character stage rule with three-way alternating dialogue, transitions, an item close-up, a CG, a branching choice, variables, localization (en/ja), and two endings."
+  }
+}

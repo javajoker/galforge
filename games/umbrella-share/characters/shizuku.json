@@ -1,0 +1,13 @@
+{
+  "gvnf": "1.0",
+  "id": "shizuku",
+  "name": "@char.shizuku.name",
+  "nameColor": "#4f9db0",
+  "sprite": "shizuku",
+  "defaultOutfit": "uniform",
+  "defaultPose": "stand",
+  "defaultFace": "neutral",
+  "defaultPosition": "right",
+  "voice": { "default": "auto" },
+  "tags": ["heroine"]
+}
