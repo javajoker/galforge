@@ -3,7 +3,6 @@
   "_note": "Single source of truth for every asset. Paths are illustrative; this sample ships no binaries. This file doubles as the asset work-order for an art/voice pipeline.",
 
   "backgrounds": {
-    "classroom_day":    { "path": "bg/classroom_day.webp",    "w": 1920, "h": 1080 },
     "classroom_sunset": { "path": "bg/classroom_sunset.webp", "w": 1920, "h": 1080 },
     "rooftop_sunset":   { "path": "bg/rooftop_sunset.webp",   "w": 1920, "h": 1080 }
   },
@@ -14,8 +13,7 @@
   },
 
   "items": {
-    "love_letter": { "path": "item/love_letter.png", "w": 900, "h": 1200 },
-    "class_key":   { "path": "item/class_key.png",   "w": 800, "h": 800 }
+    "class_key": { "path": "item/class_key.png", "w": 800, "h": 800 }
   },
 
   "ui": {
@@ -79,7 +77,6 @@
   },
 
   "se": {
-    "bell":      { "path": "se/school_bell.ogg" },
     "door":      { "path": "se/door_slide.ogg" },
     "heartbeat": { "path": "se/heartbeat.ogg" }
   },
