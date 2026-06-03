@@ -1,0 +1,62 @@
+{
+  "gvnf": "1.0",
+  "id": "s01_busstop",
+  "stageMode": "auto",
+  "cast": ["yuuto", "nao", "shizuku", "rui"],
+  "script": [
+    { "bg": "busstop_rain", "transition": { "type": "fade", "duration": 900 } },
+    { "bgm": "rain_theme", "fade": 800 },
+    { "narrate": "@s01.intro" },
+    { "se": "thunder" },
+
+    { "show": "nao", "at": "left", "outfit": "uniform", "face": "grin", "transition": "dissolve" },
+    { "say": "nao", "id": "s01_002", "text": "@s01.nao.002", "face": "grin", "voice": "auto" },
+    { "say": "yuuto", "id": "s01_003", "text": "@s01.yuuto.003" },
+    { "say": "nao", "id": "s01_004", "text": "@s01.nao.004", "face": "pout" },
+
+    { "se": "thunder" },
+    { "face": "nao", "to": "surprised", "transition": "dissolve" },
+    { "narrate": "@s01.thunder" },
+    { "face": "nao", "to": "grin" },
+
+    { "say": "shizuku", "id": "s01_006", "text": "@s01.shizuku.006", "face": "neutral", "voice": "auto" },
+    { "say": "yuuto", "id": "s01_007", "text": "@s01.yuuto.007" },
+    { "say": "nao", "id": "s01_008", "text": "@s01.nao.008", "face": "smile" },
+
+    { "set": { "met_rui": true } },
+    { "_comment": "Rui is the THIRD speaker: auto-stage evicts the non-active partner (shizuku) and seats rui — never 3 sprites.",
+      "say": "rui", "id": "s01_009", "text": "@s01.rui.009", "face": "surprised" },
+    { "say": "rui", "id": "s01_010", "text": "@s01.rui.010" },
+    { "narrate": "@s01.bothspeak" },
+    { "say": "rui", "id": "s01_011", "text": "@s01.rui.011", "face": "grin" },
+    { "say": "nao", "id": "s01_012", "text": "@s01.nao.012", "face": "grin" },
+
+    { "hide": "rui", "transition": { "type": "slide", "direction": "right" } },
+    { "hide": "nao", "transition": { "type": "slide", "direction": "left" } },
+    { "narrate": "@s01.gone" },
+    { "narrate": "@s01.charm" },
+    { "set": { "has_charm": true } },
+
+    { "closeup": "bus_charm", "caption": "@s01.charm.caption", "zoom": 1.3, "dim": 0.7, "transition": "dissolve" },
+    { "wait": 600 },
+    { "closeup": null },
+
+    { "say": "shizuku", "id": "s01_013", "text": "@s01.shizuku.013", "face": "smile" },
+    { "say": "shizuku", "id": "s01_014", "text": "@s01.shizuku.014", "face": "blush" },
+    { "say": "yuuto", "id": "s01_015", "text": "@s01.yuuto.015" },
+
+    { "choice": "@choice.umbrella.prompt", "id": "umbrella", "options": [
+      { "text": "@choice.umbrella.chase", "set": { "route": "nao", "nao_affection": "+2" }, "jump": "#chase" },
+      { "text": "@choice.umbrella.wait", "set": { "route": "shizuku", "shizuku_affection": "+2" }, "jump": "#wait" }
+    ] },
+
+    { "label": "chase" },
+    { "say": "yuuto", "id": "s01_016", "text": "@s01.yuuto.chase" },
+    { "jump": "s02_after" },
+
+    { "label": "wait" },
+    { "say": "yuuto", "id": "s01_017", "text": "@s01.yuuto.wait" },
+    { "say": "shizuku", "id": "s01_018", "text": "@s01.shizuku.wait", "face": "smile" },
+    { "jump": "s02_after" }
+  ]
+}

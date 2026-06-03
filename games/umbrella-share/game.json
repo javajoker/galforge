@@ -1,0 +1,27 @@
+{
+  "gvnf": "1.0",
+  "id": "umbrella_share",
+  "title": "@game.title",
+  "version": "1.0.0",
+  "authors": ["GalForge galforge-generate (dry-run)"],
+  "screen": { "width": 1920, "height": 1080 },
+  "locales": { "default": "en", "supported": ["en"] },
+  "entry": "s01_busstop",
+  "voicePattern": "{speaker}/{line}",
+  "text": { "speed": "normal", "autoDelayMs": 1200 },
+  "audio": { "bgm": 0.8, "se": 0.9, "voice": 1.0 },
+  "stage": { "mode": "auto", "emphasis": { "dim": 0.55, "narration": "keep" } },
+  "transitions": { "bg": "dissolve", "char": "dissolve", "cg": "fade" },
+  "variables": {
+    "route": "common",
+    "nao_affection": 0,
+    "shizuku_affection": 0,
+    "met_rui": false,
+    "has_charm": false
+  },
+  "endings": {
+    "nao_end": { "title": "@ending.nao_end.title" },
+    "shizuku_end": { "title": "@ending.shizuku_end.title" }
+  },
+  "meta": { "cover": "cg_cover", "rating": "all-ages", "source": "source.md" }
+}

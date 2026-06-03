@@ -1,0 +1,13 @@
+{
+  "gvnf": "1.0",
+  "id": "nao",
+  "name": "@char.nao.name",
+  "nameColor": "#e8a13a",
+  "sprite": "nao",
+  "defaultOutfit": "uniform",
+  "defaultPose": "stand",
+  "defaultFace": "neutral",
+  "defaultPosition": "left",
+  "voice": { "default": "auto" },
+  "tags": ["heroine"]
+}

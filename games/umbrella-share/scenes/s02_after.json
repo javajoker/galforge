@@ -1,0 +1,33 @@
+{
+  "gvnf": "1.0",
+  "id": "s02_after",
+  "stageMode": "auto",
+  "cast": ["yuuto", "nao", "shizuku"],
+  "_note": "Branches on `route`. nao route: CG ending. shizuku route: outfit change (uniform->casual) + CG ending.",
+  "script": [
+    { "bg": "street_evening", "transition": { "type": "fade", "duration": 1000 } },
+    { "bgm": "tender", "fade": 1000 },
+    { "narrate": "@s02.intro" },
+
+    { "if": "route == 'nao'",
+      "then": [
+        { "cg": "cg_yellow_umbrella", "transition": "fade" },
+        { "narrate": "@s02.nao.cg" },
+        { "cg": null },
+        { "show": "nao", "at": "center", "outfit": "uniform", "face": "smile", "transition": "dissolve" },
+        { "say": "nao", "id": "s02_001", "text": "@s02.nao.001", "face": "smile" },
+        { "end": "nao_end" }
+      ],
+      "else": [
+        { "show": "shizuku", "at": "center", "outfit": "uniform", "face": "neutral", "transition": "dissolve" },
+        { "narrate": "@s02.shizuku.intro" },
+        { "outfit": "shizuku", "to": "casual", "transition": "dissolve" },
+        { "say": "shizuku", "id": "s02_002", "text": "@s02.shizuku.002", "face": "blush" },
+        { "cg": "cg_shared_shelter", "transition": "fade" },
+        { "narrate": "@s02.shizuku.cg" },
+        { "cg": null },
+        { "end": "shizuku_end" }
+      ]
+    }
+  ]
+}

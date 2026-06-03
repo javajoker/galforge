@@ -1,0 +1,13 @@
+{
+  "gvnf": "1.0",
+  "id": "rui",
+  "name": "@char.rui.name",
+  "nameColor": "#6aa84f",
+  "sprite": "rui",
+  "defaultOutfit": "uniform",
+  "defaultPose": "stand",
+  "defaultFace": "neutral",
+  "defaultPosition": "right",
+  "voice": { "default": null },
+  "tags": ["support"]
+}
