@@ -35,6 +35,9 @@
     { "_comment": "rin speaks again; she was evicted, so she swaps back in for mei. Still never >2 sprites.",
       "say": "rin", "id": "s01_008", "text": "@s01.rin.008", "face": "smile" },
 
+    { "_comment": "Adhoc scene (§14): hand off to a custom-styled module for a small interaction, then rejoin the flow. `stay` returns here (continue to the lunch choice); `slip_away` jumps to #leave.",
+      "call": "s01b_desk" },
+
     { "choice": "@choice.lunch.prompt", "id": "lunch", "options": [
       { "text": "@choice.lunch.opt_join",  "set": { "aoi_affection": "+2", "met_rin": true, "route": "aoi" }, "jump": "#join" },
       { "text": "@choice.lunch.opt_leave", "set": { "aoi_affection": "-1" }, "jump": "#leave" }

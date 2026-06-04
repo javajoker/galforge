@@ -64,8 +64,10 @@ A GVNF project is a directory:
 │   └── manifest.json         # §3  resource manifest (required, exactly one)
 ├── i18n/                     # §4  per-locale string tables (required: default locale)
 │   └── <locale>.json
-└── scenes/                   # §8  scene scripts (required: ≥1; entry scene must exist)
-    └── <scene_id>.json
+├── scenes/                   # §8  scene scripts (required: ≥1; entry scene must exist)
+│   └── <scene_id>.json
+└── adhoc/                    # §14 optional: adhoc-scene modules + styles (custom scenes)
+    └── <name>.js
 ```
 
 Paths inside the manifest are **relative to the project root**. Runtimes resolve assets
@@ -506,7 +508,9 @@ A scene file is an ordered program of commands.
 }
 ```
 
-Scene file fields: `gvnf` (✓), `id` (✓, matches filename), `script` (✓, array of commands),
+Scene file fields: `gvnf` (✓), `id` (✓, matches filename), and **exactly one of** `script`
+(an array of commands — a normal scene) or `adhoc` (§14 — a custom-presentation scene);
+optional `kind` (`"script"`|`"adhoc"`, advisory — the presence of `adhoc` is authoritative),
 optional `stageMode`, optional `cast` (id[] hint for tooling), optional `_note`.
 
 ### 8.0 Command form
@@ -794,6 +798,10 @@ For each command:
   `set`→`do`→`jump`.
 - For `wait`/`se(wait)`/blocking transitions: block as specified.
 - Advance PC; on `jump`/`call`/`return`/`end`, transfer/terminate accordingly.
+- On entering an **adhoc scene** (§14): suspend the command loop, run the scene's module to
+  obtain a result, apply the result's variable writes, then transfer to the chosen declared
+  exit (`jump`/`end`/`return`). A runtime that cannot run the module applies the scene's
+  `fallback` instead (§14.5).
 
 ### 10.3 Stage enforcement
 
@@ -865,6 +873,9 @@ non-zero on any error; `--strict` promotes ship-blocking warnings to errors (BR-
 - Sprite uses an outfit/pose/expression not declared for the character. [BR-7]
 - `jump`/`call`/choice target does not resolve to a scene or label. [BR-10]
 - A state that forces **three** simultaneously visible sprites. [BR-1]
+- Adhoc scene invalid: not exactly one of `script`/`adhoc`; an exit without exactly one of
+  `jump`/`end`/`return`; an exit `jump`/`end` that does not resolve; `fallback.exit` names
+  an undeclared exit. [§14.7]
 - i18n key referenced but missing from the **default** locale. [BR-13]
 - Type-mismatched comparison in a condition; malformed expression grammar.
 - Unknown major `gvnf` version.
@@ -892,8 +903,161 @@ present-but-unused) as the asset work order (F-025).
 - **Bring in a third speaker:** just `say` as them — auto-alternate swaps the stage.
 - **Inspect an object:** `{ "closeup": "class_key", "caption": "@k" }` … `{ "closeup": null }`.
 - **Scene transition:** end with `{ "jump": "s02_rooftop" }` or `{ "end": "good" }`.
+- **Custom interaction (minigame / map / puzzle):** a `kind:"adhoc"` scene (§14), usually
+  `call`ed from the flow and rejoining it via a `return` exit that writes back variables.
 - **Drafting:** write inline prose first; run `galforge i18n` to auto-extract keys before
   ship.
+
+---
+
+## 14. Adhoc scenes (custom presentation & interactions)
+
+The command list (§8) is the visual-novel grammar — dialogue, stage, branching. Some beats
+need something the grammar deliberately does *not* model: a minigame, a map, a puzzle, a
+data-terminal, a drag-and-drop, a bespoke-styled cutscene. An **adhoc scene** is the escape
+hatch: a scene whose presentation and interaction are supplied by the **game developer** as a
+code **module**, drawn with its own styles, layout, and controls. When it finishes it returns
+a **result** that is written back into game variables and hands control to one of its
+**declared exits**, rejoining the common game flow.
+
+Adhoc scenes are a *bounded* escape hatch: the module is free inside its own frame, but the
+ways it can leave are fixed up front — so the flow graph stays static, lint-able, and
+deterministic (§10), and the result is *set back into* the ordinary script flow.
+
+### 14.1 An adhoc scene file
+
+A scene is **adhoc** when it carries an `adhoc` object instead of a `script` (a scene MUST
+have **exactly one** of `script` or `adhoc`). It MAY also set `"kind": "adhoc"` for clarity;
+the presence of `adhoc` is authoritative.
+
+```json
+{
+  "gvnf": "1.0",
+  "id": "s04b_calibration",
+  "kind": "adhoc",
+  "adhoc": {
+    "module": "adhoc/calibration.js",
+    "style":  "adhoc/calibration.css",
+    "entry":  "mount",
+    "title":  "@s04cal.title",
+    "fullscreen": true,
+    "params": { "rounds": 4 },
+    "reads":  ["order_lean", "chaos_lean", "shelter_lean"],
+    "writes": ["order_lean", "chaos_lean", "shelter_lean", "saw_truth"],
+    "exits": [
+      { "id": "done",  "return": true },
+      { "id": "abort", "jump": "s05_four_fates" }
+    ],
+    "fallback": { "exit": "done", "set": { "saw_truth": true } }
+  }
+}
+```
+
+| Field | Type | Req | Description |
+|-------|------|-----|-------------|
+| `module` | string | ✓ | Path (relative to project root) to the adhoc **module** (an ES module). |
+| `style` | string | – | Path to a CSS file injected while the scene runs and removed on exit. |
+| `entry` | string | – | Named export to invoke. Default: the module's default export, else `mount`. |
+| `title` | text | – | Display label (menus / accessibility). |
+| `fullscreen` | bool | – | If `true`, the scene takes the **entire viewport** (past any letterboxing) and the player chrome (controls/HUD) is hidden for its duration — an immersive takeover. Default `false`: a stage-sized surface inside the player frame, with controls still available above it. Either way the module confines its DOM to `root`. |
+| `params` | object | – | Arbitrary JSON handed to the module (`context.params`). |
+| `reads` | id[] | – | Variables the module may read. Informational; treated as variable reads by lint. |
+| `writes` | id[] | – | Variables the module may write. Runtimes SHOULD reject writes outside this set; lint treats them as declared. |
+| `exits` | exit[] | ✓ | ≥1 declared ways to leave the scene (§14.3). |
+| `fallback` | object | ✓ | `{ "exit": "<exit-id>", "set": {…} }` used when the module can't run (§14.5). MUST name a declared exit. |
+
+### 14.2 The module contract
+
+The module is an ECMAScript module the runtime loads (e.g. via dynamic `import()`). The
+runtime resolves the **entry function** in this order: the export named by `entry`; the
+default export; an export named `mount`. The entry is invoked with a single **host context**
+object and returns (or resolves to) a **result** (§14.4):
+
+```js
+// adhoc/calibration.js
+export async function mount(ctx) {
+  // ctx.root — a cleared element sized to the stage; render your UI here.
+  // …draw, await player interaction (honouring ctx.signal)…
+  return { exit: "done", set: { order_lean: "+2", saw_truth: true } };
+}
+```
+
+Host context (normative minimum):
+
+| Member | Type | Description |
+|--------|------|-------------|
+| `root` | element | An empty container the module owns until exit — stage-sized by default, or viewport-sized when `fullscreen` (§14.1). |
+| `params` | object | Deep copy of `adhoc.params`. |
+| `vars` | object | Read-only snapshot of game variables (at least the `reads` set). |
+| `locale` / `defaultLocale` | string | Active and default locale codes. |
+| `t(key)` | function | Resolves displayable text (§1.3/§4); accepts `"@key"` or `"key"`. |
+| `asset(group, id)` | function | Resolves a manifest asset id to a URL, or `null`. |
+| `screen` | object | `{ width, height }` reference resolution. |
+| `signal` | AbortSignal | Aborted when the scene is torn down (load / restart / unmount); the module MUST stop and clean up. |
+
+The module MUST NOT assume any GVNF UI is present and MUST confine its DOM to `root`. It
+SHOULD honour `ctx.signal` (drop timers/listeners) and SHOULD restrict variable writes to
+`writes`.
+
+### 14.3 Exits
+
+Each entry of `exits` is a declared, statically-analysable way to leave the scene:
+
+| Key | Type | Req | Description |
+|-----|------|-----|-------------|
+| `id` | id | ✓ | Exit id; the module selects an exit by this id. |
+| `jump` | jumpTarget | one-of | Transfer to a scene/label (§8.19) on this exit. |
+| `end` | id\|bool | one-of | End the game with this ending (§8.20) on this exit. |
+| `return` | `true` | one-of | Pop the call stack (§8.19) — resume the scene that `call`ed this one. |
+| `set` | assignments | – | Assignments applied when this exit is taken (before the module's dynamic `set`). |
+
+**Exactly one** of `jump`/`end`/`return` per exit. A `return` exit makes the adhoc scene a
+**subroutine**: a common scene runs `{ "call": "s04b_calibration" }`, and the `return` exit
+resumes the next command — the most direct realization of *“the adhoc result is set back into
+the common flow.”* (A `return` exit reached with an empty call stack behaves as a generic
+`end`.)
+
+### 14.4 The result, and writing back to the flow
+
+The module returns `{ "exit": "<id>", "set"?: { … } }`. The runtime then:
+
+1. Looks up `exit` in `exits`. If it is missing or unknown → the **fallback** (§14.5).
+2. Applies the exit's static `set`, then the result's dynamic `set` (§9.2 assignment syntax:
+   literals, `"+n"`, `"=expr"`). Writes SHOULD be limited to `writes`.
+3. Tears the scene down (aborts `signal`, clears `root`, removes any injected `style`).
+4. Transfers control via the exit's `jump` / `end` / `return`.
+
+### 14.5 Fallback & portability
+
+`fallback` is mandatory so every adhoc scene is **completable without the module**: a runtime
+that cannot execute modules (a non-JS player, an export/analysis tool, a blocked or failed
+`import`, or a module that throws) applies `fallback.set` then takes `fallback.exit`. This
+keeps a GVNF project portable and always finishable.
+
+### 14.6 Determinism & saves
+
+An adhoc scene is the one sanctioned exception to deterministic flow (BR-9): the module may
+use timing, input, or randomness internally. The **flow graph stays deterministic** because
+the exits are declared. Runtimes treat an adhoc scene as **atomic**: a save taken while it is
+active records the program counter at the adhoc scene's **entry**, so resuming re-runs the
+scene from the start (variables committed by *previously completed* adhoc scenes persist in
+the normal store). A module MAY expose optional `serialize()`/`restore()` hooks for mid-scene
+resume; that is OPTIONAL and post-v1.
+
+### 14.7 Lint rules for adhoc scenes
+
+- Exactly one of `script` / `adhoc` per scene (error).
+- `adhoc.module`, a non-empty `adhoc.exits`, and `adhoc.fallback` are present (schema).
+- Each exit has exactly one of `jump`/`end`/`return`; each `jump` resolves to a scene/label
+  and each `end` is a declared ending (errors, as §8.19/§8.20).
+- `fallback.exit` names a declared exit (error).
+- `reads`/`writes` and any exit/fallback `set` keys are treated as variable reads /
+  declarations (§9.1).
+- Reachability follows each exit's `jump`; the adhoc scene is itself reachable when `call`ed
+  or `jump`ed to. `return` exits resume the caller (no new target).
+- `module`/`style` paths and the module's *internal* i18n keys are **not** verified by lint
+  (they resolve dynamically at runtime); a module SHOULD use keys present in the locale
+  tables.
 
 ---
 

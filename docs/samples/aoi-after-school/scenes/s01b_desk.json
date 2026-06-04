@@ -1,0 +1,27 @@
+{
+  "gvnf": "1.0",
+  "id": "s01b_desk",
+  "kind": "adhoc",
+  "_note": "Adhoc scene (script-standard §14): a small custom-styled 'a moment to spare' card with its own layout/interactions, rendered by a developer-supplied module. `fullscreen` makes it an immersive viewport takeover (past the letterbox, player chrome hidden). `call`ed from s01_classroom before the lunch choice; its result writes aoi_affection back into the flow. The `stay` exit returns to resume s01; the `slip_away` exit jumps to s01's #leave branch. `fallback` keeps the game completable on any runtime that can't run the module.",
+  "adhoc": {
+    "module": "adhoc/keepsake.js",
+    "style": "adhoc/keepsake.css",
+    "entry": "mount",
+    "title": "@s01b.title",
+    "fullscreen": true,
+    "params": {
+      "options": [
+        { "t": "@s01b.opt.linger", "exit": "stay",      "set": { "aoi_affection": "+2" } },
+        { "t": "@s01b.opt.tidy",   "exit": "stay",      "set": { "aoi_affection": "+1" } },
+        { "t": "@s01b.opt.slip",   "exit": "slip_away" }
+      ]
+    },
+    "reads": ["aoi_affection"],
+    "writes": ["aoi_affection"],
+    "exits": [
+      { "id": "stay", "return": true },
+      { "id": "slip_away", "jump": "s01_classroom#leave", "set": { "aoi_affection": "-1" } }
+    ],
+    "fallback": { "exit": "stay" }
+  }
+}

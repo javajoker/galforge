@@ -135,6 +135,15 @@ html, body {
 }
 #gf-controls button.active { background: var(--gf-accent); color: #fff; border-color: var(--gf-accent); }
 
+/* ---- adhoc scenes (§14): a stage-sized, module-owned surface ----
+   The adhoc module renders entirely inside this element with its own injected
+   styles; controls (z-index 5) stay above so save/load/language stay reachable. */
+.gf-adhoc { position: absolute; inset: 0; z-index: 4; }
+/* fullscreen takeover: appended to <body>, fills the viewport above all chrome;
+   the frame behind is hidden so translucent areas read as the page background. */
+.gf-adhoc.fullscreen { position: fixed; inset: 0; z-index: 9999; }
+body.gf-adhoc-fs #gf-frame { visibility: hidden; }
+
 /* ---- panels (backlog / saves) ---- */
 .gf-panel {
   position: absolute; inset: 8% 6%; background: rgba(6,8,14,.96); border: 1px solid rgba(255,255,255,.14);

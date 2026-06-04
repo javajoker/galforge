@@ -4,7 +4,9 @@ A dependency-free, single-page **GVNF v1.0** interpreter. It implements the runt
 contract of the [script standard](../docs/spec/script-standard.md): the command loop (§8/§10),
 the **two-character stage model with alternating display** (§6), transitions (§7), layered
 sprites with expression/outfit swaps (§3.3/§5), item close-ups and CG (§8.9–§8.10),
-variables & branching (§9), localization (§1.3/§4), voice (§3.4), and save/load (§11).
+variables & branching (§9), localization (§1.3/§4), voice (§3.4), save/load (§11), and
+**adhoc scenes** — developer-supplied modules with custom presentation/interaction that write
+their result back into the flow (§14).
 
 It is the **canonical playback semantics** for the format — when a runtime's behaviour and
 this one disagree, this one is right (or the spec is, and both should be fixed).

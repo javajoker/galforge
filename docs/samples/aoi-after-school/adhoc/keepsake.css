@@ -1,0 +1,64 @@
+/* Aoi, After School — adhoc-scene styling (script-standard §14).
+ * Scoped under .aoi-moment so it cannot leak into the GVNF player UI. The runtime
+ * injects this stylesheet while the scene runs and removes it on exit. A warm,
+ * sunset-classroom card — deliberately nothing like the GVNF dialogue box, to show
+ * an adhoc scene can present in any style it likes. */
+
+.aoi-moment {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6%;
+  background: radial-gradient(130% 110% at 70% 20%, rgba(255, 196, 120, 0.22), rgba(40, 24, 28, 0.86) 60%, rgba(20, 12, 18, 0.95));
+  font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+  color: #fff3e6;
+}
+
+.aoi-moment-card {
+  width: min(540px, 92%);
+  padding: clamp(20px, 3.4vw, 36px);
+  border-radius: 18px;
+  background: linear-gradient(180deg, rgba(60, 36, 40, 0.82), rgba(36, 22, 28, 0.9));
+  border: 1px solid rgba(255, 200, 150, 0.32);
+  box-shadow: 0 24px 70px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 230, 200, 0.12);
+  animation: aoi-moment-in 0.55s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+@keyframes aoi-moment-in {
+  from { opacity: 0; transform: translateY(14px); }
+  to { opacity: 1; transform: none; }
+}
+
+.aoi-moment-title {
+  font-size: clamp(13px, 1.5vw, 16px);
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: #ffcf9a;
+  margin-bottom: 12px;
+}
+.aoi-moment-intro {
+  margin: 0 0 22px;
+  font-size: clamp(15px, 2vw, 19px);
+  line-height: 1.55;
+  color: #fbe9d6;
+}
+
+.aoi-moment-opts { display: flex; flex-direction: column; gap: 11px; }
+.aoi-moment-opt {
+  text-align: left;
+  padding: 14px 18px;
+  border-radius: 12px;
+  cursor: pointer;
+  font-size: 15px;
+  color: #fff3e6;
+  background: rgba(255, 210, 160, 0.08);
+  border: 1px solid rgba(255, 200, 150, 0.28);
+  transition: transform 0.12s ease, background 0.2s ease, border-color 0.2s ease;
+}
+.aoi-moment-opt:hover {
+  background: rgba(255, 210, 160, 0.2);
+  border-color: rgba(255, 210, 160, 0.7);
+  transform: translateX(4px);
+}
+.aoi-moment-opt:last-child { color: #ffd2c2; opacity: 0.86; }

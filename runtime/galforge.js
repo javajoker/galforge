@@ -154,13 +154,14 @@
       }
     }
 
-    start() {
+    async start() {
       this.vars = Object.assign({}, this.game.variables || {});
       this.backlog = []; this.callStack = [];
       this.stage = { visible: [], last: null, active: null, bg: null, cg: null, closeup: null };
       $("gf-sprites").innerHTML = ""; $("gf-ending").classList.add("hidden");
       $("gf-boot").classList.add("hidden");
-      this.enterScene(this.game.entry, 0);
+      this.teardownAdhoc();
+      await this.enterSceneById(this.game.entry, null);
       this.run();
     }
 
@@ -180,12 +181,103 @@
     }
 
     async jump(target) {
-      const [scenePart, label] = target.split("#");
+      const [scenePart, label] = String(target).split("#");
       const sid = scenePart || this.sceneId;
-      const script = await this.ensureScene(sid);
-      const idx = label ? this.labelIndex(script, label) + 1 : 0;
+      await this.enterSceneById(sid, label);
+    }
+
+    // Enter a scene by id: a normal scene sets the frame stack; an adhoc scene
+    // (§14) hands control to its module and transfers via the chosen exit.
+    async enterSceneById(sid, label) {
+      const scene = await this.getScene(sid);
       this.sceneId = sid;
+      if (scene && scene.adhoc) { await this.runAdhoc(scene); return; }
+      const script = scene.script;
+      const idx = label ? this.labelIndex(script, label) + 1 : 0;
       this.frames = [{ cmds: script, i: idx, origin: null }];
+    }
+
+    // =====================================================================
+    // Adhoc scenes (§14) — developer-supplied module with custom presentation
+    // =====================================================================
+    adhocURL(p) {
+      try { return new URL(`${this.dir}/${p}`, document.baseURI).href; }
+      catch { return `${this.dir}/${p}`; }
+    }
+    adhocContext(root, signal, a) {
+      return {
+        root,
+        params: JSON.parse(JSON.stringify(a.params || {})),
+        vars: Object.assign({}, this.vars),
+        locale: this.locale,
+        defaultLocale: this.defaultLocale,
+        t: (k) => this.text(String(k).startsWith("@") ? k : "@" + k),
+        asset: (group, id) => this.assetPath(group, id),
+        screen: Object.assign({}, this.game.screen || {}),
+        signal,
+      };
+    }
+    resolveAdhocExit(a, result) {
+      const exits = a.exits || [];
+      const byId = (id) => exits.find((e) => e.id === id);
+      let exit = result && result.exit ? byId(result.exit) : null;
+      if (!exit) {
+        const fb = a.fallback || {};
+        const base = byId(fb.exit);
+        if (!base) return null;
+        exit = Object.assign({}, base, { set: Object.assign({}, fb.set || {}, base.set || {}) });
+      }
+      return exit;
+    }
+    async mountAdhoc(a) {
+      const fullscreen = !!a.fullscreen;
+      const host = document.createElement("div");
+      host.id = "gf-adhoc"; host.className = "gf-adhoc" + (fullscreen ? " fullscreen" : "");
+      // fullscreen (§14) escapes the letterboxed frame and hides the player chrome
+      (fullscreen ? document.body : $("gf-stage")).appendChild(host);
+      if (fullscreen) document.body.classList.add("gf-adhoc-fs");
+      this._adhocHost = host;
+      this._adhocAbort = new AbortController();
+      if (a.style) {
+        const link = document.createElement("link");
+        link.rel = "stylesheet"; link.href = this.adhocURL(a.style); link.dataset.adhoc = this.sceneId;
+        document.head.appendChild(link); this._adhocStyle = link;
+      }
+      try {
+        const mod = await import(this.adhocURL(a.module));
+        const fn = (a.entry && mod[a.entry]) || mod.default || mod.mount;
+        if (typeof fn !== "function") throw new Error("adhoc module has no entry function");
+        return await fn(this.adhocContext(host, this._adhocAbort.signal, a));
+      } catch (e) {
+        return null; // → declared fallback (§14.5)
+      }
+    }
+    teardownAdhoc() {
+      document.body.classList.remove("gf-adhoc-fs");
+      if (this._adhocAbort) { try { this._adhocAbort.abort(); } catch {} this._adhocAbort = null; }
+      if (this._adhocStyle) { this._adhocStyle.remove(); this._adhocStyle = null; }
+      if (this._adhocHost) { this._adhocHost.remove(); this._adhocHost = null; }
+    }
+    async runAdhoc(scene) {
+      const a = scene.adhoc;
+      $("gf-dialogue").classList.add("hidden"); $("gf-choices").classList.add("hidden");
+      const result = await this.mountAdhoc(a);
+      const exit = this.resolveAdhocExit(a, result);
+      if (exit) {
+        if (exit.set) this.assign(exit.set);            // static exit writes…
+        if (result && result.set) this.assign(result.set); // …then dynamic module writes
+      }
+      this.teardownAdhoc();
+      if (!exit) { this.cEnd({ end: null }); return; }
+      if (exit.return) {
+        const f = this.callStack.pop();
+        if (f) await this.restoreFrames(f.scene, f.frames);
+        else this.cEnd({ end: null });               // return with empty stack ⇒ end (§14.3)
+      } else if ("end" in exit) {
+        this.cEnd({ end: exit.end });
+      } else if (exit.jump) {
+        await this.jump(exit.jump);                    // may chain into another adhoc scene
+      }
     }
 
     // ---------- the run loop ----------
@@ -572,11 +664,13 @@
       const stage = JSON.parse(JSON.stringify(this.stage));
       // strip transient render-only flags so the snapshot matches save.schema.json (§11)
       (stage.visible || []).forEach((v) => { delete v.entering; });
+      // an adhoc scene is atomic (§14.6): record its entry so resume re-runs it
+      const adhocNow = this.scenes[this.sceneId] && this.scenes[this.sceneId].adhoc;
       return {
         gvnf: "1.0", game: this.game.id, gameVersion: this.game.version, savedAt: new Date().toISOString(),
         locale: this.locale,
-        pc: { scene: this.sceneId, index: top ? top.i : 0 },   // §11 conformant
-        frames: this.serializeFrames(),                         // engine extension (nested-branch resume)
+        pc: { scene: this.sceneId, index: adhocNow ? 0 : (top ? top.i : 0) },   // §11 conformant
+        frames: adhocNow ? [] : this.serializeFrames(),         // engine extension (nested-branch resume)
         callStack: this.callStack, variables: Object.assign({}, this.vars),
         stage: stage, audio: { bgm: this.audio.bgm, bgmPositionMs: this.audio.bgmEl ? Math.round((this.audio.bgmEl.currentTime || 0) * 1000) : 0 },
         backlogCursor: this.backlog.length,
@@ -613,7 +707,16 @@
       if (this.stage.cg) await this.cCg({ cg: this.stage.cg, transition: "none" });
       else { $("gf-cg").classList.add("hidden"); $("gf-cg").classList.remove("on"); }
       if (s.audio && s.audio.bgm) this.playBgm(s.audio.bgm, 0); else this.stopBgm();
+      this.teardownAdhoc();
       const scene = (s.pc && s.pc.scene) || s.scene;
+      const sc = await this.getScene(scene).catch(() => null);
+      if (sc && sc.adhoc) {
+        // adhoc scenes are atomic (§14.6): re-run from entry, then resume the flow
+        this.sceneId = scene; this.running = false;
+        await this.runAdhoc(sc);
+        this.run();
+        return;
+      }
       if (s.frames) await this.restoreFrames(scene, s.frames);
       else { const script = await this.ensureScene(scene); this.sceneId = scene; this.frames = [{ cmds: script, i: (s.pc && s.pc.index) || 0, origin: null }]; }
       if (this.running) { /* loop will pick up */ } else this.run();

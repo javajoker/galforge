@@ -23,6 +23,12 @@
     "s01.key.caption": "The brass key to Class 2-B. Warm from being held all afternoon.",
     "s01.rin.008": "So! Lunch tomorrow, the four of us? You're coming too, right?",
 
+    "s01b.title": "A Moment to Spare",
+    "s01b.intro": "Rin's question hangs in the air. The brass key is still warm in your hand — what do you do with the moment before you answer?",
+    "s01b.opt.linger": "Linger, and meet Aoi's eyes a little longer.",
+    "s01b.opt.tidy": "Help gather the scattered worksheets together.",
+    "s01b.opt.slip": "Quietly drift toward the door instead.",
+
     "choice.lunch.prompt": "What do I say?",
     "choice.lunch.opt_join": "“Yeah— mind if I join you?”",
     "choice.lunch.opt_leave": "“…I should really get going.”",

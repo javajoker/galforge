@@ -138,9 +138,14 @@ def resolve_verb(cmd):
     return None
 
 
+def is_adhoc(scene):
+    """An adhoc scene (script-standard §14) carries an `adhoc` block instead of `script`."""
+    return isinstance(scene, dict) and "adhoc" in scene
+
+
 def walk(script):
     """Yield every command, descending into if/then/elif/else and choice option `do`."""
-    for cmd in script:
+    for cmd in script or []:
         yield cmd
         for arm in ("then", "else"):
             if isinstance(cmd.get(arm), list):
@@ -154,6 +159,8 @@ def walk(script):
 
 
 def scene_labels(scene):
+    if is_adhoc(scene):
+        return set()  # adhoc scenes have no in-scene labels (§14)
     return {c["label"] for c in walk(scene["script"]) if resolve_verb(c) == "label"}
 
 
@@ -396,10 +403,51 @@ def validate_cross(proj, rep: Report, strict: bool):
             if isinstance(cmd["end"], str) and cmd["end"] not in game.get("endings", {}):
                 rep.err(where, f"ending '{cmd['end']}' not declared in game.json")
 
+    def chk_set(d, where):
+        """Treat a `set`-style map's keys as declared and collect expr reads."""
+        if not isinstance(d, dict):
+            return
+        declared_vars.update(d.keys())
+        for val in d.values():
+            if isinstance(val, str) and val.startswith("="):
+                read_vars.update(expr_idents(val[1:]))
+
+    def chk_adhoc(scene, sid, where):
+        """Validate an adhoc scene's exits, fallback, and variable interface (§14.7)."""
+        a = scene["adhoc"]
+        chk_text(a.get("title"), f"{where} adhoc.title")
+        read_vars.update(a.get("reads", []) or [])
+        declared_vars.update(a.get("writes", []) or [])
+        exit_ids = set()
+        for j, ex in enumerate(a.get("exits", []) or []):
+            ew = f"{where} adhoc.exits[{j}]"
+            if ex.get("id"):
+                exit_ids.add(ex["id"])
+            ctrl = [k for k in ("jump", "end", "return") if k in ex]
+            if len(ctrl) != 1:
+                rep.err(ew, f"exit must have exactly one of jump/end/return (has: {ctrl})")
+            if "jump" in ex:
+                chk_jump(ex["jump"], sid, ew)
+            if "end" in ex and isinstance(ex["end"], str) and ex["end"] not in game.get("endings", {}):
+                rep.err(ew, f"ending '{ex['end']}' not declared in game.json")
+            chk_set(ex.get("set"), ew)
+        fb = a.get("fallback") or {}
+        if fb.get("exit") not in exit_ids:
+            rep.err(f"{where} adhoc.fallback", f"fallback exit '{fb.get('exit')}' is not a declared exit")
+        chk_set(fb.get("set"), f"{where} adhoc.fallback")
+
     # Walk every scene
     for sid, scene in scenes.items():
         if scene.get("id") and scene["id"] != sid:
             rep.warn(f"scenes/{sid}.json", f"id '{scene['id']}' does not match filename")
+        has_script = isinstance(scene.get("script"), list)
+        has_adhoc = is_adhoc(scene)
+        if has_script == has_adhoc:  # both present, or neither
+            rep.err(f"scenes/{sid}.json", "scene must have exactly one of 'script' or 'adhoc' (§14.1)")
+            continue
+        if has_adhoc:
+            chk_adhoc(scene, sid, f"scenes/{sid}.json")
+            continue
         for i, cmd in enumerate(scene["script"]):
             chk_cmd(cmd, sid, f"{sid}[{i}]")
             for arm in ("then", "else"):
@@ -434,7 +482,15 @@ def validate_cross(proj, rep: Report, strict: bool):
         if sid in reachable or sid not in scenes:
             return
         reachable.add(sid)
-        for cmd in walk(scenes[sid]["script"]):
+        scene = scenes[sid]
+        if is_adhoc(scene):  # an adhoc scene reaches the scenes named by its exit jumps (§14.3)
+            for ex in scene["adhoc"].get("exits", []) or []:
+                if "jump" in ex:
+                    tgt = ex["jump"].partition("#")[0]
+                    if tgt:
+                        visit(tgt)
+            return
+        for cmd in walk(scene["script"]):
             v = resolve_verb(cmd)
             if v in ("jump", "call"):
                 tgt = cmd[v].partition("#")[0]
@@ -491,6 +547,8 @@ def simulate_stage(proj, rep: Report):
     global_mode = proj["game"].get("stage", {}).get("mode", "auto")
 
     def sim(scene):
+        if is_adhoc(scene):
+            return 0  # adhoc scenes manage their own presentation; no GVNF stage (§14)
         mode = scene.get("stageMode", global_mode)
         visible = []  # list[(char, slot)]
         last = [None]
