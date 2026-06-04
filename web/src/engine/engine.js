@@ -53,7 +53,7 @@ export class Engine {
     return res.json();
   }
 
-  async boot() {
+  async boot(opts = {}) {
     this.game = await this.loadJSON("game.json");
     this.manifest = await this.loadJSON("resources/manifest.json");
     this.defaultLocale = this.game.locales.default;
@@ -70,9 +70,84 @@ export class Engine {
     this.defaultTransitions = this.game.transitions || {};
     await this.loadAllScenes();
     await this.loadAllChars();
+    // Preload media so the first frame of every scene paints without pop-in.
+    // Best-effort: missing files (demo games ship no binaries) are tolerated.
+    if (opts.preload !== false) {
+      try {
+        await this.preload(opts.onProgress, opts);
+      } catch {
+        /* preload is non-fatal — playback can stream on demand */
+      }
+    }
     this.ready = true;
     this.start();
     return this;
+  }
+
+  // ----------------------------------------------------------- preloading
+  // Gather every media URL the game can reference, from the manifest.
+  // Voice is excluded by default (large, line-specific — it streams on demand);
+  // pass { includeVoice: true } to warm it too.
+  collectAssetURLs({ includeVoice = false } = {}) {
+    const images = new Set();
+    const audio = new Set();
+    const m = this.manifest || {};
+    const addImg = (a) => { const u = this.assetURL(a); if (u) images.add(u); };
+    const addAud = (a) => { const u = this.assetURL(a); if (u) audio.add(u); };
+    for (const group of ["backgrounds", "cg", "items", "ui"])
+      for (const id in m[group] || {}) addImg(m[group][id]);
+    for (const cid in m.sprites || {}) {
+      const sp = m.sprites[cid] || {};
+      for (const outfit in sp.bodies || {})
+        for (const pose in sp.bodies[outfit]) addImg(sp.bodies[outfit][pose]);
+      for (const face in sp.faces || {}) addImg(sp.faces[face]);
+    }
+    for (const id in m.bgm || {}) addAud(m.bgm[id]);
+    for (const id in m.se || {}) addAud(m.se[id]);
+    if (includeVoice) for (const id in m.voice || {}) addAud(this.manifest.voice[id]);
+    return { images: [...images], audio: [...audio] };
+  }
+
+  preloadImage(url) {
+    return new Promise((resolve) => {
+      const img = new Image();
+      const done = () => resolve();
+      img.onload = done;
+      img.onerror = done; // tolerate a missing bitmap; don't block the boot
+      try { img.decoding = "async"; } catch { /* not supported */ }
+      img.src = url;
+    });
+  }
+  preloadAudio(url) {
+    // Warm the HTTP cache; later `new Audio(url)` playback hits the cache.
+    return fetch(url, { cache: "force-cache" }).then(() => {}, () => {});
+  }
+
+  // Preload all collected assets with bounded concurrency, reporting progress
+  // as { loaded, total } after each settles. Resolves when everything settles.
+  async preload(onProgress, opts = {}) {
+    const { images, audio } = this.collectAssetURLs(opts);
+    const tasks = [
+      ...images.map((u) => () => this.preloadImage(u)),
+      ...audio.map((u) => () => this.preloadAudio(u)),
+    ];
+    const total = tasks.length;
+    let loaded = 0;
+    this.preloadState = { loaded, total };
+    if (onProgress) onProgress({ loaded, total });
+    if (!total) return;
+    const concurrency = Math.min(opts.concurrency || 8, total);
+    let next = 0;
+    const worker = async () => {
+      while (next < tasks.length) {
+        const job = tasks[next++];
+        await job();
+        loaded += 1;
+        this.preloadState = { loaded, total };
+        if (onProgress) onProgress({ loaded, total });
+      }
+    };
+    await Promise.all(Array.from({ length: concurrency }, worker));
   }
 
   async loadAllScenes() {
@@ -188,19 +263,22 @@ export class Engine {
   }
 
   // ------------------------------------------------------------- asset paths
+  assetURL(a) {
+    return a ? (/^https?:\/\//.test(a.path) ? a.path : `${this.baseDir}/${a.path}`) : null;
+  }
   asset(group, id) {
     const a = this.manifest[group] && this.manifest[group][id];
-    return a ? (/^https?:\/\//.test(a.path) ? a.path : `${this.baseDir}/${a.path}`) : null;
+    return this.assetURL(a);
   }
   spriteBody(charId, outfit, pose) {
     const sp = this.manifest.sprites && this.manifest.sprites[charId];
     const b = sp && sp.bodies && sp.bodies[outfit] && sp.bodies[outfit][pose];
-    return b ? (/^https?:\/\//.test(b.path) ? b.path : `${this.baseDir}/${b.path}`)  : null;
+    return this.assetURL(b);
   }
   spriteFace(charId, face) {
     const sp = this.manifest.sprites && this.manifest.sprites[charId];
     const f = sp && sp.faces && sp.faces[face];
-    return f ? (/^https?:\/\//.test(f.path) ? f.path : `${this.baseDir}/${f.path}`)  : null;
+    return this.assetURL(f);
   }
   vol(kind) {
     const a = this.game.audio || {};
