@@ -13,7 +13,8 @@ instead of two side-by-side, so phones stay clean.
 > The engine in [`src/engine/`](src/engine/) is a UI-agnostic port of the
 > canonical [`../runtime/galforge.js`](../runtime/galforge.js) — same format
 > semantics (two-character stage, alternating display, transitions, layered
-> sprites, branching, i18n, voice, §11 save/load), just driven by React.
+> sprites, branching, i18n, voice, §11 save/load, and §14 adhoc scenes), just
+> driven by React.
 
 ## Quick start
 
@@ -103,5 +104,6 @@ single active character that alternates sides with the speaker.
 | `src/hooks.js` | `useEngine`, `useOrientation`, `useTypewriter`, `useAudio`. |
 | `src/ui/Stage.jsx` | Background, sprites (incl. portrait single-character rule), CG, close-up. |
 | `src/ui/Player.jsx` | Play screen: dialogue, choices, controls, panels, ending, effects. |
+| `src/ui/Adhoc.jsx` | Mounts an adhoc scene's module (§14): dynamic-imports it, hands it a host context + container, reports the result back to the engine. |
 | `src/ui/Menu.jsx` | Game-select grid (data-driven from `content/index.json`). |
 | `scripts/sync-content.mjs` | Bundles GVNF projects into `public/content/`. |

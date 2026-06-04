@@ -18,8 +18,12 @@ aoi-after-school/
 ├── i18n/
 │   ├── en.json               # default locale (contains every key)
 │   └── ja.json               # Japanese
+├── adhoc/                    # §14 adhoc-scene module + style
+│   ├── keepsake.js           #   custom-styled "a moment to spare" card
+│   └── keepsake.css
 └── scenes/
-    ├── s01_classroom.json    # intro, 3-way alternating dialogue, close-up, choice
+    ├── s01_classroom.json    # intro, 3-way alternating dialogue, close-up, calls s01b, choice
+    ├── s01b_desk.json        # ADHOC scene (§14): custom module; returns to the flow
     └── s02_rooftop.json      # branch on `route`, CG, outfit change, two endings
 ```
 
@@ -44,6 +48,7 @@ aoi-after-school/
 | Labels & jumps | `#join`, `#leave`, `jump "s02_rooftop"` |
 | Camera effect | `s02`: `{ "flash": … }` |
 | Localization (en default + ja) | `i18n/` |
+| **Adhoc scene** (custom module, write-back, declared exits) | `s01b_desk.json` (`kind:"adhoc"`) + `adhoc/keepsake.*`; `call`ed from `s01` |
 | Endings | `good`, `normal` |
 
 ## The two-character rule in action (s01 stage trace)
@@ -74,10 +79,24 @@ change `lastSpeaker`. Watch the **visible** column never exceed two:
 ## Branch / ending map
 
 ```
-s01_classroom ──choice "lunch"
-                 ├─ join  → set route="aoi", aoi_affection+=2, met_rin=true → s02 → if route=='aoi' → ending "good"
-                 └─ leave → set aoi_affection-=1                            → s02 → else            → ending "normal"
+s01_classroom ──call s01b_desk (ADHOC §14)
+                 ├─ exit "stay"      → aoi_affection ±    → resume → choice "lunch"
+                 │                                                    ├─ join  → route="aoi", aoi_affection+=2, met_rin=true → s02 → if route=='aoi' → ending "good"
+                 │                                                    └─ leave → aoi_affection-=1                            → s02 → else            → ending "normal"
+                 └─ exit "slip_away" → aoi_affection-=1   → jump s01#leave → s02 → else → ending "normal"
 ```
+
+## The adhoc scene (§14)
+
+`s01b_desk` is an **adhoc scene**: it carries an `adhoc` block instead of a `script`, so
+presentation is handed to a developer module ([`adhoc/keepsake.js`](aoi-after-school/adhoc/keepsake.js),
+styled by [`adhoc/keepsake.css`](aoi-after-school/adhoc/keepsake.css)) that draws its own
+card UI. `s01` reaches it with `{ "call": "s01b_desk" }`; the module returns a result
+`{ exit, set }`. The runtime writes the result's variables (`aoi_affection`) and takes the
+named exit: **`stay`** (`return: true`) resumes `s01` at the next command, while
+**`slip_away`** (`jump`) branches to `s01`'s `#leave`. A mandatory **`fallback`** exit keeps
+the game completable on any runtime that can't run the module, so exits stay statically
+analysable and `galforge lint` can still verify reachability.
 
 ## Validate it
 

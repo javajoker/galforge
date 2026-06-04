@@ -2,6 +2,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { useEngine, useOrientation, useTypewriter, useAudio } from "../hooks.js";
 import Stage from "./Stage.jsx";
+import Adhoc from "./Adhoc.jsx";
 
 /* ----------------------------------------------------------------- Dialogue */
 function Dialogue({ view, shown, typing }) {
@@ -272,7 +273,9 @@ export default function Player() {
       <div className="gf-frame" ref={stageRef} onClick={onStageClick}>
         <Stage view={view} portrait={portrait} />
 
-        {view.status === "choice" ? (
+        {view.status === "adhoc" ? (
+          <Adhoc view={view} engine={engine} />
+        ) : view.status === "choice" ? (
           <Choices view={view} onChoose={(p) => engine.choose(p)} />
         ) : view.status === "line" ? (
           <Dialogue view={view} shown={shown} typing={typing} />

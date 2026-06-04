@@ -1,0 +1,109 @@
+/* ECHO calibration terminal — adhoc-scene styling (script-standard §14).
+ * Everything is scoped under .echo-cal so it cannot leak into the GVNF player UI.
+ * The runtime injects this stylesheet while the scene runs and removes it on exit. */
+
+.echo-cal {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: radial-gradient(120% 120% at 50% 28%, rgba(8, 16, 28, 0.86), rgba(2, 4, 8, 0.97));
+  color: #cdebff;
+  font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+  overflow: hidden;
+}
+/* faint CRT scanlines */
+.echo-cal::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: repeating-linear-gradient(0deg, rgba(120, 200, 255, 0.05) 0 1px, transparent 1px 3px);
+  mix-blend-mode: screen;
+}
+
+.echo-cal-panel {
+  position: relative;
+  width: min(620px, 88%);
+  max-height: 88%;
+  overflow: auto;
+  padding: clamp(18px, 3vw, 32px);
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  border: 1px solid rgba(120, 200, 255, 0.4);
+  border-radius: 14px;
+  background: linear-gradient(180deg, rgba(10, 22, 38, 0.92), rgba(6, 12, 22, 0.92));
+  box-shadow: 0 0 0 1px rgba(120, 200, 255, 0.08), 0 20px 80px rgba(0, 0, 0, 0.6),
+    inset 0 0 60px rgba(40, 120, 200, 0.08);
+  animation: echo-cal-in 0.5s ease;
+}
+@keyframes echo-cal-in {
+  from { opacity: 0; transform: translateY(10px) scale(0.98); }
+  to { opacity: 1; transform: none; }
+}
+
+.echo-cal-head { display: flex; align-items: center; gap: 10px; }
+.echo-cal-dot {
+  width: 9px; height: 9px; border-radius: 50%;
+  background: #58e0ff; box-shadow: 0 0 12px #58e0ff;
+  animation: echo-cal-pulse 1.6s ease-in-out infinite;
+}
+@keyframes echo-cal-pulse { 50% { opacity: 0.3; } }
+.echo-cal-title {
+  letter-spacing: 0.28em; text-transform: uppercase;
+  font-size: clamp(13px, 1.4vw, 16px); color: #9fdcff;
+}
+.echo-cal-intro { font-size: 13px; line-height: 1.5; color: #8fb8d4; }
+.echo-cal-base { font-size: 12px; letter-spacing: 0.12em; color: #5d87a8; }
+
+.echo-cal-body { display: flex; flex-direction: column; gap: 14px; }
+.echo-cal-prog { font-size: 11px; letter-spacing: 0.3em; color: #4f7ea0; }
+.echo-cal-q {
+  font-size: clamp(16px, 2.1vw, 22px); line-height: 1.45; color: #eaf6ff;
+  font-family: system-ui, sans-serif;
+}
+
+.echo-cal-opts { display: flex; flex-direction: column; gap: 10px; }
+.echo-cal-opt {
+  text-align: left; padding: 13px 16px; border-radius: 10px; cursor: pointer;
+  border: 1px solid rgba(120, 200, 255, 0.28); background: rgba(120, 200, 255, 0.05);
+  color: #dcefff; font-size: 15px; font-family: system-ui, sans-serif;
+  transition: transform 0.12s ease, background 0.2s ease, border-color 0.2s ease;
+}
+.echo-cal-opt:hover {
+  background: rgba(120, 200, 255, 0.16);
+  border-color: rgba(120, 200, 255, 0.7);
+  transform: translateX(4px);
+}
+
+.echo-cal-refuse {
+  align-self: flex-end; padding: 6px 10px; cursor: pointer;
+  background: none; border: none; color: #ff7a7a; font-family: inherit;
+  font-size: 12px; letter-spacing: 0.18em; text-transform: uppercase; opacity: 0.8;
+}
+.echo-cal-refuse:hover { opacity: 1; text-shadow: 0 0 10px rgba(255, 80, 80, 0.6); }
+
+.echo-cal-read {
+  font-size: clamp(15px, 2vw, 20px); line-height: 1.5; color: #eaf6ff;
+  font-family: system-ui, sans-serif;
+}
+.echo-cal-bars { display: flex; flex-direction: column; gap: 8px; margin-top: 4px; }
+.echo-cal-bar { height: 8px; border-radius: 6px; background: rgba(120, 200, 255, 0.1); overflow: hidden; }
+.echo-cal-bar .fill {
+  display: block; height: 100%; width: 0; border-radius: 6px;
+  transition: width 0.8s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+.echo-cal-bar .fill[data-lean="order"]   { background: linear-gradient(90deg, #3a7bd5, #67d0ff); }
+.echo-cal-bar .fill[data-lean="chaos"]   { background: linear-gradient(90deg, #d53a7b, #ff8a5b); }
+.echo-cal-bar .fill[data-lean="shelter"] { background: linear-gradient(90deg, #3ad58a, #aef5c9); }
+
+.echo-cal-ack {
+  align-self: center; margin-top: 8px; padding: 11px 26px; cursor: pointer;
+  border-radius: 999px; border: 1px solid rgba(120, 200, 255, 0.6);
+  background: rgba(120, 200, 255, 0.12); color: #eaf6ff; font-family: inherit;
+  letter-spacing: 0.2em; text-transform: uppercase; font-size: 13px;
+  transition: background 0.2s ease, box-shadow 0.2s ease;
+}
+.echo-cal-ack:hover { background: rgba(120, 200, 255, 0.24); box-shadow: 0 0 24px rgba(88, 224, 255, 0.35); }

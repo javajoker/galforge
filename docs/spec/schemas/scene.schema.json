@@ -2,22 +2,78 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://galforge.dev/schemas/1.0/scene.schema.json",
   "title": "GVNF scene script (scenes/<id>.json)",
-  "description": "An ordered list of commands. See script-standard §8. Each command resolves to exactly one command verb (enforced by lint; face/outfit/voice are dual-use per §8.0); '_'-prefixed keys are ignored.",
+  "description": "A scene is either a command script (ordered list of commands, see script-standard §8) or an adhoc scene (custom-presentation module, §14). Exactly one of 'script' or 'adhoc'. Each command resolves to exactly one command verb (enforced by lint; face/outfit/voice are dual-use per §8.0); '_'-prefixed keys are ignored.",
   "type": "object",
-  "required": ["gvnf", "id", "script"],
+  "required": ["gvnf", "id"],
   "properties": {
     "gvnf": { "$ref": "common.schema.json#/$defs/version" },
     "id": { "$ref": "common.schema.json#/$defs/id" },
+    "kind": { "enum": ["script", "adhoc"], "description": "Advisory scene kind; the presence of 'adhoc' is authoritative (§14.1)." },
     "stageMode": { "enum": ["auto", "manual"] },
     "cast": { "type": "array", "items": { "$ref": "common.schema.json#/$defs/id" } },
     "script": {
       "type": "array",
       "items": { "$ref": "#/$defs/command" }
-    }
+    },
+    "adhoc": { "$ref": "#/$defs/adhoc" }
   },
+  "oneOf": [
+    { "required": ["script"], "not": { "required": ["adhoc"] } },
+    { "required": ["adhoc"], "not": { "required": ["script"] } }
+  ],
   "additionalProperties": true,
   "$defs": {
     "tr": { "$ref": "common.schema.json#/$defs/transition" },
+
+    "adhoc": {
+      "type": "object",
+      "description": "An adhoc scene: a developer-supplied module renders custom presentation/interaction, then returns a result that writes back variables and takes a declared exit (script-standard §14).",
+      "required": ["module", "exits", "fallback"],
+      "properties": {
+        "module": { "type": "string", "description": "Path (project-root-relative) to the adhoc ES module." },
+        "style": { "type": "string", "description": "Path to a CSS file injected while the scene runs." },
+        "entry": { "type": "string", "description": "Named export to invoke; default the module's default export, else 'mount'." },
+        "title": { "$ref": "common.schema.json#/$defs/text" },
+        "params": { "type": "object" },
+        "reads": { "type": "array", "items": { "$ref": "common.schema.json#/$defs/id" } },
+        "writes": { "type": "array", "items": { "$ref": "common.schema.json#/$defs/id" } },
+        "exits": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/$defs/adhocExit" }
+        },
+        "fallback": {
+          "type": "object",
+          "description": "Used when the runtime cannot run the module; MUST name a declared exit (§14.5).",
+          "required": ["exit"],
+          "properties": {
+            "exit": { "$ref": "common.schema.json#/$defs/id" },
+            "set": { "$ref": "common.schema.json#/$defs/assignments" }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": true
+    },
+    "adhocExit": {
+      "type": "object",
+      "description": "A declared way to leave an adhoc scene. Exactly one of jump/end/return (§14.3).",
+      "required": ["id"],
+      "properties": {
+        "id": { "$ref": "common.schema.json#/$defs/id" },
+        "jump": { "$ref": "common.schema.json#/$defs/jumpTarget" },
+        "end": { "oneOf": [{ "$ref": "common.schema.json#/$defs/id" }, { "type": "boolean" }] },
+        "return": { "const": true },
+        "set": { "$ref": "common.schema.json#/$defs/assignments" }
+      },
+      "oneOf": [
+        { "required": ["jump"], "not": { "anyOf": [{ "required": ["end"] }, { "required": ["return"] }] } },
+        { "required": ["end"], "not": { "anyOf": [{ "required": ["jump"] }, { "required": ["return"] }] } },
+        { "required": ["return"], "not": { "anyOf": [{ "required": ["jump"] }, { "required": ["end"] }] } }
+      ],
+      "additionalProperties": false
+    },
+
     "command": {
       "type": "object",
       "description": "A single command. Validated as 'matches at least one known verb'; exactly-one-verb is a lint rule.",

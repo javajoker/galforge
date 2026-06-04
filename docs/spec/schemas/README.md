@@ -10,7 +10,7 @@ Machine-validatable schemas for every GVNF document type. Normative prose lives 
 | [resource-manifest.schema.json](resource-manifest.schema.json) | `resources/manifest.json` | §3 |
 | [locale.schema.json](locale.schema.json) | `i18n/<locale>.json` string tables | §4 |
 | [character.schema.json](character.schema.json) | `characters/<id>.json` | §5 |
-| [scene.schema.json](scene.schema.json) | `scenes/<id>.json` command scripts | §6–§9 |
+| [scene.schema.json](scene.schema.json) | `scenes/<id>.json` command scripts & adhoc scenes | §6–§9, §14 |
 | [save.schema.json](save.schema.json) | Save snapshots | §11 |
 
 ## What schemas do and don't cover

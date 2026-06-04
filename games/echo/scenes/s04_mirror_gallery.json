@@ -12,6 +12,9 @@
     { "narrate": "@s04.intro" },
     { "narrate": "@s04.gallery" },
 
+    { "narrate": "@s04cal.lead" },
+    { "call": "s04b_calibration" },
+
     { "show": "shelter", "at": "left", "outfit": "gown", "face": "worried", "transition": "dissolve" },
     { "say": "shelter", "id": "s04_001", "text": "@s04.shelter.001", "face": "worried" },
     { "show": "chaos", "at": "right", "outfit": "street", "face": "grin", "transition": "dissolve" },

@@ -346,6 +346,16 @@ body {
   cursor: not-allowed;
 }
 
+/* --------------------------------------------------- adhoc scenes (§14) */
+/* A stage-sized, module-owned surface. The adhoc module renders entirely
+ * inside this element with its own injected styles; the player controls
+ * (z-index 10) stay above it so save/load/language remain reachable. */
+.gf-adhoc {
+  position: absolute;
+  inset: 0;
+  z-index: 9;
+}
+
 /* ----------------------------------------------------------------- controls */
 .gf-controls {
   position: absolute;

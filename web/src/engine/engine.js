@@ -164,7 +164,17 @@ export class Engine {
         continue;
       }
       this.scenes[id] = scene;
-      this.collectTargets(scene.script, queue);
+      if (scene.adhoc) {
+        // an adhoc scene (§14) reaches the scenes named by its exit jumps
+        for (const ex of scene.adhoc.exits || []) {
+          if (typeof ex.jump === "string") {
+            const s = ex.jump.split("#")[0];
+            if (s) queue.push(s);
+          }
+        }
+      } else {
+        this.collectTargets(scene.script, queue);
+      }
     }
   }
   collectTargets(cmds, out) {
@@ -375,7 +385,9 @@ export class Engine {
     this.pending = null;
     this.fx = [];
     this.sceneId = this.game.entry;
-    this.frames = [{ cmds: this.sceneScript(this.game.entry), i: 0, origin: null }];
+    const entryScene = this.scenes[this.game.entry];
+    if (entryScene && entryScene.adhoc) this.enterAdhoc(this.game.entry);
+    else this.frames = [{ cmds: this.sceneScript(this.game.entry), i: 0, origin: null }];
     this.step();
     this.emit();
   }
@@ -395,6 +407,7 @@ export class Engine {
 
   // The synchronous command loop — runs until a blocking beat or an ending.
   step() {
+    if (this.pending) return; // suspended on a blocking beat (line/choice/wait/adhoc)
     while (this.frames.length) {
       const fr = this.frames[this.frames.length - 1];
       if (fr.i >= fr.cmds.length) {
@@ -507,12 +520,10 @@ export class Engine {
       case "label":
         return;
       case "jump":
-        this.doJump(cmd.jump);
-        return;
+        return this.doJump(cmd.jump); // may return "ADHOC" (lands on an adhoc scene)
       case "call":
         this.callStack.push({ scene: this.sceneId, frames: this.serializeFrames() });
-        this.doJump(cmd.call);
-        return;
+        return this.doJump(cmd.call);
       case "return": {
         const f = this.callStack.pop();
         if (f) this.restoreFramesSync(f.scene, f.frames);
@@ -591,10 +602,95 @@ export class Engine {
   doJump(target) {
     const [scenePart, label] = String(target).split("#");
     const sid = scenePart || this.sceneId;
+    const scene = this.scenes[sid];
+    if (scene && scene.adhoc) {
+      this.sceneId = sid;
+      return this.enterAdhoc(sid);
+    }
     const script = this.sceneScript(sid);
     const idx = label ? this.labelIndex(script, label) + 1 : 0;
     this.sceneId = sid;
     this.frames = [{ cmds: script, i: idx, origin: null }];
+  }
+
+  // ----------------------------------------------------------- adhoc (§14)
+  // Suspend the command loop on an adhoc scene; the UI runs its module and
+  // calls finishAdhoc() with the result.
+  enterAdhoc(sid) {
+    const scene = this.scenes[sid];
+    this.pending = { kind: "adhoc", sceneId: sid, adhoc: scene.adhoc, adhocSeq: ++this.lineSeq };
+    this.frames = [{ cmds: [], i: 0, origin: null }];
+    return "ADHOC";
+  }
+  // Build the host context (script-standard §14.2) handed to the module.
+  adhocContext(root, signal) {
+    const a = this.pending && this.pending.adhoc;
+    return {
+      root,
+      params: a ? JSON.parse(JSON.stringify(a.params || {})) : {},
+      vars: Object.assign({}, this.vars),
+      locale: this.locale,
+      defaultLocale: this.defaultLocale,
+      t: (k) => this.text(String(k).startsWith("@") ? k : "@" + k),
+      asset: (group, id) => this.asset(group, id),
+      screen: Object.assign({}, this.game.screen || {}),
+      signal,
+    };
+  }
+  // Resolve the chosen exit; fall back to the declared fallback (§14.4/§14.5).
+  resolveAdhocExit(a, result) {
+    const exits = a.exits || [];
+    const byId = (id) => exits.find((e) => e.id === id);
+    let exit = result && result.exit ? byId(result.exit) : null;
+    if (!exit) {
+      const fb = a.fallback || {};
+      const base = byId(fb.exit);
+      if (!base) return null;
+      exit = { ...base, set: { ...(fb.set || {}), ...(base.set || {}) } };
+    }
+    return exit;
+  }
+  // Called by the UI when the module resolves (result may be null → fallback).
+  finishAdhoc(result) {
+    if (!this.pending || this.pending.kind !== "adhoc") return;
+    const a = this.pending.adhoc;
+    this.pending = null;
+    const exit = this.resolveAdhocExit(a, result);
+    if (!exit) {
+      this.doEnd({ end: null });
+      this.emit();
+      return;
+    }
+    if (exit.set) this.assign(exit.set); // static exit writes first…
+    if (result && result.set) this.assign(result.set); // …then the module's dynamic writes
+    if (exit.return) {
+      const f = this.callStack.pop();
+      if (f) this.restoreFramesSync(f.scene, f.frames);
+      else {
+        this.doEnd({ end: null }); // return with an empty call stack ⇒ generic end (§14.3)
+        this.emit();
+        return;
+      }
+    } else if ("end" in exit) {
+      this.doEnd({ end: exit.end });
+      this.emit();
+      return;
+    } else if (exit.jump) {
+      const sig = this.doJump(exit.jump);
+      if (sig === "ADHOC") {
+        this.emit(); // chained adhoc scene — wait for its module
+        return;
+      }
+    }
+    this.step();
+    this.emit();
+  }
+  adhocURL(p) {
+    try {
+      return new URL(`${this.baseDir}/${p}`, document.baseURI).href;
+    } catch {
+      return `${this.baseDir}/${p}`;
+    }
   }
 
   doEnd(cmd) {
@@ -735,6 +831,15 @@ export class Engine {
     this.pending = null;
     this.fx = [];
     const scene = (s.pc && s.pc.scene) || s.scene;
+    const sc = this.scenes[scene];
+    if (sc && sc.adhoc) {
+      // an adhoc scene is atomic (§14.6): resume by re-running it from its entry
+      this.sceneId = scene;
+      this.enterAdhoc(scene);
+      this.backlog = this.backlog.slice(0, s.backlogCursor != null ? s.backlogCursor : this.backlog.length);
+      this.emit();
+      return;
+    }
     if (s.frames) this.restoreFramesSync(scene, s.frames);
     else {
       this.sceneId = scene;
@@ -832,6 +937,16 @@ export class Engine {
       v.tap = true;
     } else if (this.pending && this.pending.kind === "wait") {
       v.waitMs = this.pending.ms;
+    } else if (this.pending && this.pending.kind === "adhoc") {
+      const a = this.pending.adhoc;
+      v.adhoc = {
+        key: this.pending.adhocSeq,
+        sceneId: this.pending.sceneId,
+        moduleHref: this.adhocURL(a.module),
+        styleHref: a.style ? this.adhocURL(a.style) : null,
+        entry: a.entry || null,
+        title: a.title ? this.text(a.title) : null,
+      };
     }
     if (this.ended) v.ending = this.ended;
     this.fx = [];
