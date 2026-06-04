@@ -1,0 +1,45 @@
+{
+  "gvnf": "1.0",
+  "id": "s04_mirror_gallery",
+  "stageMode": "auto",
+  "cast": ["shelter", "chaos", "order"],
+  "_note": "第四章 镜廊. All three leaders present — auto-alternation keeps <=2 sprites on stage. ORDER appears in person and makes his offer. Minor choice tunes order_lean. Leads to the s05 decision.",
+  "script": [
+    { "bg": "mirror_gallery", "transition": { "type": "pixelate", "duration": 1000 } },
+    { "bgm": "bgm_mirror", "fade": 1500 },
+    { "se": "se_drone" },
+
+    { "narrate": "@s04.intro" },
+    { "narrate": "@s04.gallery" },
+
+    { "show": "shelter", "at": "left", "outfit": "gown", "face": "worried", "transition": "dissolve" },
+    { "say": "shelter", "id": "s04_001", "text": "@s04.shelter.001", "face": "worried" },
+    { "show": "chaos", "at": "right", "outfit": "street", "face": "grin", "transition": "dissolve" },
+    { "say": "chaos", "id": "s04_002", "text": "@s04.chaos.001", "face": "grin" },
+
+    { "cg": "cg_mirror_desires", "transition": { "type": "dissolve", "duration": 900 } },
+    { "narrate": "@s04.desires" },
+    { "cg": null, "transition": { "type": "dissolve", "duration": 700 } },
+
+    { "if": "saw_truth", "then": [
+      { "narrate": "@s04.aside.truth" }
+    ] },
+
+    { "narrate": "@s04.order.voice" },
+    { "say": "order", "id": "s04_003", "text": "@s04.order.001", "face": "stern", "voice": "auto" },
+    { "say": "order", "id": "s04_004", "text": "@s04.order.002", "face": "smug" },
+    { "say": "order", "id": "s04_005", "text": "@s04.order.003", "face": "neutral", "voice": "auto" },
+
+    { "say": "chaos", "id": "s04_006", "text": "@s04.chaos.002", "face": "smug" },
+    { "say": "shelter", "id": "s04_007", "text": "@s04.shelter.002", "face": "sad" },
+
+    { "choice": "@choice.offer.prompt", "id": "offer", "options": [
+      { "text": "@choice.offer.opt_cold", "set": { "order_lean": "+1", "chaos_lean": "+1" }, "jump": "#decide" },
+      { "text": "@choice.offer.opt_tempt", "set": { "order_lean": "+2" }, "jump": "#decide" }
+    ] },
+
+    { "label": "decide" },
+    { "narrate": "@s04.decide" },
+    { "jump": "s05_four_fates" }
+  ]
+}

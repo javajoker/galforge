@@ -1,0 +1,34 @@
+{
+  "gvnf": "1.0",
+  "id": "echo",
+  "title": "@game.title",
+  "version": "1.0.0",
+  "authors": ["GalForge galforge-generate"],
+  "screen": { "width": 1920, "height": 1080 },
+  "locales": { "default": "zh-CN", "supported": ["zh-CN", "en"] },
+  "entry": "s01_order_hall",
+  "voicePattern": "{speaker}/{line}",
+  "text": { "speed": "normal", "autoDelayMs": 1400 },
+  "audio": { "bgm": 0.8, "se": 0.9, "voice": 1.0 },
+  "stage": { "mode": "auto", "emphasis": { "dim": 0.55, "offsetY": 0, "narration": "keep" } },
+  "transitions": { "bg": "dissolve", "char": "dissolve", "cg": "fade" },
+  "variables": {
+    "route": "common",
+    "order_lean": 0,
+    "chaos_lean": 0,
+    "shelter_lean": 0,
+    "saw_truth": false
+  },
+  "endings": {
+    "order_end": { "title": "@ending.order_end.title" },
+    "chaos_end": { "title": "@ending.chaos_end.title" },
+    "shelter_end": { "title": "@ending.shelter_end.title" },
+    "refuse_end": { "title": "@ending.refuse_end.title" }
+  },
+  "meta": {
+    "cover": "cg_cover",
+    "rating": "teen",
+    "source": "ECHO.md",
+    "description": "近未来，一个被算法彻底理解的世界。你曾是系统的维护者，因一张1999年的旧照片被标记为『潜在异常体』。在秩序、混沌、庇护三大协议的拉扯中，ECHO计划真正的实验目标，是寻找一种连被完全理解之后仍能说出『不』的人类意识。四种命运，一个关于主体性的拒绝。"
+  }
+}

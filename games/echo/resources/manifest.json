@@ -1,0 +1,143 @@
+{
+  "gvnf": "1.0",
+  "_note": "Single source of truth for every ECHO asset, and the work-order for an art/voice pipeline. Paths are illustrative; this project ships no binaries.",
+
+  "backgrounds": {
+    "order_hall":      { "path": "bg/order_hall.webp",      "w": 1920, "h": 1080, "_note": "秩序大厅 — vast, white, mirror-smooth walls & floor; huge screens looping ORDER's broadcasts." },
+    "pipes":           { "path": "bg/pipes.webp",           "w": 1920, "h": 1080, "_note": "系统底层管道 — infrastructure conduits, graffiti and stray code fragments on the walls." },
+    "data_graveyard":  { "path": "bg/data_graveyard.webp",  "w": 1920, "h": 1080, "_note": "数据墓地 — fields of dead, half-lit servers." },
+    "memory_museum":   { "path": "bg/memory_museum.webp",   "w": 1920, "h": 1080, "_note": "SHELTER's archive — warm, hushed, hung with old photographs and preserved data shards." },
+    "mirror_gallery":  { "path": "bg/mirror_gallery.webp",  "w": 1920, "h": 1080, "_note": "镜廊 — mirrored walls multiplying every figure into infinity; the system's blind spot." },
+    "white_void":      { "path": "bg/white_void.webp",      "w": 1920, "h": 1080, "_note": "The blank the world collapses into when the system cannot parse a refusal." },
+    "pod_room":        { "path": "bg/pod_room.webp",        "w": 1920, "h": 1080, "_note": "现实维生舱 — cold, clinical, harsh overhead light." }
+  },
+
+  "cg": {
+    "cg_cover":          { "path": "cg/cover.webp",          "w": 1920, "h": 1080, "tags": ["gallery"], "_note": "Title cover." },
+    "cg_photo_1999":     { "path": "cg/photo_1999.webp",     "w": 1920, "h": 1080, "tags": ["event", "gallery"], "_note": "1999年家庭聚会 — grainy, over-saturated, a cheap birthday cake; the forbidden warm memory." },
+    "cg_mirror_desires": { "path": "cg/mirror_desires.webp", "w": 1920, "h": 1080, "tags": ["event", "gallery"], "_note": "三种欲望幻象 — ORDER's power, CHAOS's revel, SHELTER's peace, reflected at once." },
+    "cg_order_throne":   { "path": "cg/order_throne.webp",   "w": 1920, "h": 1080, "tags": ["event", "gallery", "ending"], "_note": "Order ending — you ascend as the new administrator of a pristine system." },
+    "cg_chaos_collapse": { "path": "cg/chaos_collapse.webp", "w": 1920, "h": 1080, "tags": ["event", "gallery", "ending"], "_note": "Chaos ending — the system tears itself apart in colour and noise." },
+    "cg_shelter_sleep":  { "path": "cg/shelter_sleep.webp",  "w": 1920, "h": 1080, "tags": ["event", "gallery", "ending"], "_note": "Shelter ending — you lie down inside the memory and never wake." },
+    "cg_awakening":      { "path": "cg/awakening.webp",      "w": 1920, "h": 1080, "tags": ["event", "gallery"], "_note": "Waking in the pod; a centenarian waits at the bedside." },
+    "cg_real_city":      { "path": "cg/real_city.webp",      "w": 1920, "h": 1080, "tags": ["event", "gallery"], "_note": "The window onto a chaotic, real, unrecommended city." }
+  },
+
+  "items": {
+    "glitch_window": { "path": "item/glitch_window.png", "w": 1000, "h": 700, "_note": "The intruding system window: 「发现世界的真相了吗？」 signed CHAOS." },
+    "memory_shard":  { "path": "item/memory_shard.png",  "w": 800,  "h": 800, "_note": "A preserved fragment of deleted memory, glowing faintly in SHELTER's archive." }
+  },
+
+  "ui": {
+    "namebox": { "path": "ui/namebox.png" },
+    "textbox": { "path": "ui/textbox.png" }
+  },
+
+  "sprites": {
+    "chaos": {
+      "anchor": { "x": 0.5, "y": 1.0 },
+      "baseScale": 1.0,
+      "bodies": {
+        "street": {
+          "stand": { "path": "char/chaos/body/street_stand.png", "w": 760, "h": 1500, "_note": "Paint-stained jacket, glowing spray-can." }
+        }
+      },
+      "faces": {
+        "neutral":   { "path": "char/chaos/face/neutral.png",   "w": 320, "h": 340, "offset": { "x": 0, "y": 110 } },
+        "grin":      { "path": "char/chaos/face/grin.png",      "w": 320, "h": 340, "offset": { "x": 0, "y": 110 } },
+        "smug":      { "path": "char/chaos/face/smug.png",      "w": 320, "h": 340, "offset": { "x": 0, "y": 110 } },
+        "laugh":     { "path": "char/chaos/face/laugh.png",     "w": 320, "h": 340, "offset": { "x": 0, "y": 110 } },
+        "angry":     { "path": "char/chaos/face/angry.png",     "w": 320, "h": 340, "offset": { "x": 0, "y": 110 } },
+        "surprised": { "path": "char/chaos/face/surprised.png", "w": 320, "h": 340, "offset": { "x": 0, "y": 110 } }
+      }
+    },
+    "shelter": {
+      "anchor": { "x": 0.5, "y": 1.0 },
+      "baseScale": 1.0,
+      "bodies": {
+        "gown": {
+          "stand": { "path": "char/shelter/body/gown_stand.png", "w": 720, "h": 1500, "_note": "Soft archival gown." }
+        }
+      },
+      "faces": {
+        "neutral":   { "path": "char/shelter/face/neutral.png",   "w": 300, "h": 320, "offset": { "x": 0, "y": 120 } },
+        "smile":     { "path": "char/shelter/face/smile.png",     "w": 300, "h": 320, "offset": { "x": 0, "y": 120 } },
+        "sad":       { "path": "char/shelter/face/sad.png",       "w": 300, "h": 320, "offset": { "x": 0, "y": 120 } },
+        "worried":   { "path": "char/shelter/face/worried.png",   "w": 300, "h": 320, "offset": { "x": 0, "y": 120 } },
+        "surprised": { "path": "char/shelter/face/surprised.png", "w": 300, "h": 320, "offset": { "x": 0, "y": 120 } },
+        "cry":       { "path": "char/shelter/face/cry.png",       "w": 300, "h": 320, "offset": { "x": 0, "y": 120 } }
+      }
+    },
+    "order": {
+      "anchor": { "x": 0.5, "y": 1.0 },
+      "baseScale": 1.0,
+      "bodies": {
+        "system": {
+          "stand": { "path": "char/order/body/system_stand.png", "w": 760, "h": 1520, "_note": "In-system authority: pristine white suit, faint glow." }
+        },
+        "elder": {
+          "stand": { "path": "char/order/body/elder_stand.png", "w": 760, "h": 1520, "_note": "Reality: a frail hundred-year-old man." }
+        }
+      },
+      "faces": {
+        "neutral":   { "path": "char/order/face/neutral.png",   "w": 320, "h": 340, "offset": { "x": 0, "y": 110 } },
+        "stern":     { "path": "char/order/face/stern.png",     "w": 320, "h": 340, "offset": { "x": 0, "y": 110 } },
+        "smug":      { "path": "char/order/face/smug.png",      "w": 320, "h": 340, "offset": { "x": 0, "y": 110 } },
+        "smile":     { "path": "char/order/face/smile.png",     "w": 320, "h": 340, "offset": { "x": 0, "y": 110 } },
+        "sad":       { "path": "char/order/face/sad.png",       "w": 320, "h": 340, "offset": { "x": 0, "y": 110 } },
+        "surprised": { "path": "char/order/face/surprised.png", "w": 320, "h": 340, "offset": { "x": 0, "y": 110 } }
+      }
+    }
+  },
+
+  "bgm": {
+    "bgm_order":       { "path": "bgm/order.ogg",       "loop": true, "_note": "Sterile, gridded, beautiful and dead." },
+    "bgm_alarm":       { "path": "bgm/alarm.ogg",       "loop": true, "_note": "The system flags you — pulse and pursuit." },
+    "bgm_underground": { "path": "bgm/underground.ogg", "loop": true, "_note": "CHAOS's theme — gritty, syncopated, alive." },
+    "bgm_memory":      { "path": "bgm/memory.ogg",      "loop": true, "_note": "SHELTER's theme — warm, analog, nostalgic." },
+    "bgm_mirror":      { "path": "bgm/mirror.ogg",      "loop": true, "_note": "The gallery & the choice — suspended, dreamlike." },
+    "bgm_collapse":    { "path": "bgm/collapse.ogg",    "loop": false, "_note": "The refusal — the system unable to parse, breaking down." },
+    "bgm_reality":     { "path": "bgm/reality.ogg",     "loop": true, "_note": "The real world — bittersweet, breathing, hopeful." }
+  },
+
+  "se": {
+    "se_glitch":    { "path": "se/glitch.ogg" },
+    "se_heartbeat": { "path": "se/heartbeat.ogg" },
+    "se_alarm":     { "path": "se/alarm.ogg" },
+    "se_spray":     { "path": "se/spray.ogg" },
+    "se_drone":     { "path": "se/drone.ogg" },
+    "se_shatter":   { "path": "se/shatter.ogg" },
+    "se_pod":       { "path": "se/pod_hiss.ogg" }
+  },
+
+  "voice": {
+    "chaos/s02_001":      { "path": "voice/zh-CN/chaos/s02_001.ogg", "locale": "zh-CN", "char": "chaos" },
+    "chaos/s02_001@en":   { "path": "voice/en/chaos/s02_001.ogg",    "locale": "en",    "char": "chaos" },
+    "chaos/s02_008":      { "path": "voice/zh-CN/chaos/s02_008.ogg", "locale": "zh-CN", "char": "chaos" },
+    "chaos/s02_008@en":   { "path": "voice/en/chaos/s02_008.ogg",    "locale": "en",    "char": "chaos" },
+
+    "shelter/s03_001":    { "path": "voice/zh-CN/shelter/s03_001.ogg", "locale": "zh-CN", "char": "shelter" },
+    "shelter/s03_001@en": { "path": "voice/en/shelter/s03_001.ogg",    "locale": "en",    "char": "shelter" },
+    "shelter/s03_005":    { "path": "voice/zh-CN/shelter/s03_005.ogg", "locale": "zh-CN", "char": "shelter" },
+    "shelter/s03_005@en": { "path": "voice/en/shelter/s03_005.ogg",    "locale": "en",    "char": "shelter" },
+    "shelter/s03_007":    { "path": "voice/zh-CN/shelter/s03_007.ogg", "locale": "zh-CN", "char": "shelter" },
+    "shelter/s03_007@en": { "path": "voice/en/shelter/s03_007.ogg",    "locale": "en",    "char": "shelter" },
+
+    "order/s04_003":      { "path": "voice/zh-CN/order/s04_003.ogg", "locale": "zh-CN", "char": "order" },
+    "order/s04_003@en":   { "path": "voice/en/order/s04_003.ogg",    "locale": "en",    "char": "order" },
+    "order/s04_005":      { "path": "voice/zh-CN/order/s04_005.ogg", "locale": "zh-CN", "char": "order" },
+    "order/s04_005@en":   { "path": "voice/en/order/s04_005.ogg",    "locale": "en",    "char": "order" },
+
+    "order/s05_001":      { "path": "voice/zh-CN/order/s05_001.ogg",   "locale": "zh-CN", "char": "order" },
+    "order/s05_001@en":   { "path": "voice/en/order/s05_001.ogg",      "locale": "en",    "char": "order" },
+    "chaos/s05_002":      { "path": "voice/zh-CN/chaos/s05_002.ogg",   "locale": "zh-CN", "char": "chaos" },
+    "chaos/s05_002@en":   { "path": "voice/en/chaos/s05_002.ogg",      "locale": "en",    "char": "chaos" },
+    "shelter/s05_003":    { "path": "voice/zh-CN/shelter/s05_003.ogg", "locale": "zh-CN", "char": "shelter" },
+    "shelter/s05_003@en": { "path": "voice/en/shelter/s05_003.ogg",    "locale": "en",    "char": "shelter" },
+
+    "order/s06_001":      { "path": "voice/zh-CN/order/s06_001.ogg", "locale": "zh-CN", "char": "order" },
+    "order/s06_001@en":   { "path": "voice/en/order/s06_001.ogg",    "locale": "en",    "char": "order" },
+    "order/s06_005":      { "path": "voice/zh-CN/order/s06_005.ogg", "locale": "zh-CN", "char": "order" },
+    "order/s06_005@en":   { "path": "voice/en/order/s06_005.ogg",    "locale": "en",    "char": "order" }
+  }
+}

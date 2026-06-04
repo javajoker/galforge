@@ -1,0 +1,13 @@
+{
+  "gvnf": "1.0",
+  "id": "chaos",
+  "name": "@char.chaos.name",
+  "nameColor": "#e0427a",
+  "sprite": "chaos",
+  "defaultOutfit": "street",
+  "defaultPose": "stand",
+  "defaultFace": "grin",
+  "defaultPosition": "right",
+  "voice": { "default": "auto" },
+  "tags": ["faction", "chaos"]
+}
