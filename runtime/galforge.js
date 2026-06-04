@@ -230,9 +230,12 @@
       return exit;
     }
     async mountAdhoc(a) {
+      const fullscreen = !!a.fullscreen;
       const host = document.createElement("div");
-      host.id = "gf-adhoc"; host.className = "gf-adhoc";
-      $("gf-stage").appendChild(host);
+      host.id = "gf-adhoc"; host.className = "gf-adhoc" + (fullscreen ? " fullscreen" : "");
+      // fullscreen (§14) escapes the letterboxed frame and hides the player chrome
+      (fullscreen ? document.body : $("gf-stage")).appendChild(host);
+      if (fullscreen) document.body.classList.add("gf-adhoc-fs");
       this._adhocHost = host;
       this._adhocAbort = new AbortController();
       if (a.style) {
@@ -250,6 +253,7 @@
       }
     }
     teardownAdhoc() {
+      document.body.classList.remove("gf-adhoc-fs");
       if (this._adhocAbort) { try { this._adhocAbort.abort(); } catch {} this._adhocAbort = null; }
       if (this._adhocStyle) { this._adhocStyle.remove(); this._adhocStyle = null; }
       if (this._adhocHost) { this._adhocHost.remove(); this._adhocHost = null; }

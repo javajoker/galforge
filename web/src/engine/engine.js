@@ -946,6 +946,7 @@ export class Engine {
         styleHref: a.style ? this.adhocURL(a.style) : null,
         entry: a.entry || null,
         title: a.title ? this.text(a.title) : null,
+        fullscreen: !!a.fullscreen,
       };
     }
     if (this.ended) v.ending = this.ended;

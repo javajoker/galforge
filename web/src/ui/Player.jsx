@@ -268,6 +268,9 @@ export default function Player() {
     advance();
   };
 
+  // A fullscreen adhoc scene (§14) is an immersive takeover: hide the player chrome.
+  const fsAdhoc = view.status === "adhoc" && view.adhoc && view.adhoc.fullscreen;
+
   return (
     <div className={`gf-stage${portrait ? " portrait" : ""}`}>
       <div className="gf-frame" ref={stageRef} onClick={onStageClick}>
@@ -281,20 +284,22 @@ export default function Player() {
           <Dialogue view={view} shown={shown} typing={typing} />
         ) : null}
 
-        <Controls
-          view={view}
-          engine={engine}
-          auto={auto}
-          skip={skip}
-          onAuto={() => setAuto((a) => !a)}
-          onSkip={() => {
-            setSkip((s) => !s);
-            finish();
-          }}
-          onPanel={(p) => setPanel(p)}
-        />
+        {!fsAdhoc ? (
+          <Controls
+            view={view}
+            engine={engine}
+            auto={auto}
+            skip={skip}
+            onAuto={() => setAuto((a) => !a)}
+            onSkip={() => {
+              setSkip((s) => !s);
+              finish();
+            }}
+            onPanel={(p) => setPanel(p)}
+          />
+        ) : null}
 
-        {view.audio && view.audio.bgm ? <div className="gf-bgm-hud">♪ {view.audio.bgm}</div> : null}
+        {view.audio && view.audio.bgm && !fsAdhoc ? <div className="gf-bgm-hud">♪ {view.audio.bgm}</div> : null}
 
         {view.status === "ended" ? <Ending view={view} onRestart={() => engine.restart()} /> : null}
 

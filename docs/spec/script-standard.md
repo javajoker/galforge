@@ -940,6 +940,7 @@ the presence of `adhoc` is authoritative.
     "style":  "adhoc/calibration.css",
     "entry":  "mount",
     "title":  "@s04cal.title",
+    "fullscreen": true,
     "params": { "rounds": 4 },
     "reads":  ["order_lean", "chaos_lean", "shelter_lean"],
     "writes": ["order_lean", "chaos_lean", "shelter_lean", "saw_truth"],
@@ -958,6 +959,7 @@ the presence of `adhoc` is authoritative.
 | `style` | string | – | Path to a CSS file injected while the scene runs and removed on exit. |
 | `entry` | string | – | Named export to invoke. Default: the module's default export, else `mount`. |
 | `title` | text | – | Display label (menus / accessibility). |
+| `fullscreen` | bool | – | If `true`, the scene takes the **entire viewport** (past any letterboxing) and the player chrome (controls/HUD) is hidden for its duration — an immersive takeover. Default `false`: a stage-sized surface inside the player frame, with controls still available above it. Either way the module confines its DOM to `root`. |
 | `params` | object | – | Arbitrary JSON handed to the module (`context.params`). |
 | `reads` | id[] | – | Variables the module may read. Informational; treated as variable reads by lint. |
 | `writes` | id[] | – | Variables the module may write. Runtimes SHOULD reject writes outside this set; lint treats them as declared. |
@@ -984,7 +986,7 @@ Host context (normative minimum):
 
 | Member | Type | Description |
 |--------|------|-------------|
-| `root` | element | An empty container, stage-sized, owned by the module until exit. |
+| `root` | element | An empty container the module owns until exit — stage-sized by default, or viewport-sized when `fullscreen` (§14.1). |
 | `params` | object | Deep copy of `adhoc.params`. |
 | `vars` | object | Read-only snapshot of game variables (at least the `reads` set). |
 | `locale` / `defaultLocale` | string | Active and default locale codes. |

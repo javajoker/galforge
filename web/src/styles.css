@@ -355,6 +355,18 @@ body {
   inset: 0;
   z-index: 9;
 }
+/* Fullscreen takeover (§14): portaled to <body>, so it fills the whole viewport
+ * (past the letterboxed frame) and sits above all player chrome. The module paints
+ * its own backdrop; we hide the stage behind it so translucent areas read as black
+ * rather than showing the game frame. */
+.gf-adhoc.fullscreen {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+}
+body.gf-adhoc-fs .gf-stage {
+  visibility: hidden;
+}
 
 /* ----------------------------------------------------------------- controls */
 .gf-controls {

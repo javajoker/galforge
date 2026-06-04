@@ -48,7 +48,7 @@ aoi-after-school/
 | Labels & jumps | `#join`, `#leave`, `jump "s02_rooftop"` |
 | Camera effect | `s02`: `{ "flash": … }` |
 | Localization (en default + ja) | `i18n/` |
-| **Adhoc scene** (custom module, write-back, declared exits) | `s01b_desk.json` (`kind:"adhoc"`) + `adhoc/keepsake.*`; `call`ed from `s01` |
+| **Adhoc scene** (custom module, write-back, declared exits, **fullscreen**) | `s01b_desk.json` (`kind:"adhoc"`, `fullscreen:true`) + `adhoc/keepsake.*`; `call`ed from `s01` |
 | Endings | `good`, `normal` |
 
 ## The two-character rule in action (s01 stage trace)
@@ -97,6 +97,11 @@ named exit: **`stay`** (`return: true`) resumes `s01` at the next command, while
 **`slip_away`** (`jump`) branches to `s01`'s `#leave`. A mandatory **`fallback`** exit keeps
 the game completable on any runtime that can't run the module, so exits stay statically
 analysable and `galforge lint` can still verify reachability.
+
+This scene also sets **`"fullscreen": true`** (§14.1): the module takes over the whole
+viewport (past the 16:9 letterbox) and the player chrome is hidden for its duration — an
+immersive takeover. Drop the flag (the default) to render the module into a stage-sized
+surface inside the frame, with the controls still available above it.
 
 ## Validate it
 

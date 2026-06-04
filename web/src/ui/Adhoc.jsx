@@ -1,4 +1,5 @@
 import { useEffect, useRef } from "react";
+import { createPortal } from "react-dom";
 
 /* Renders a GVNF adhoc scene (script-standard §14).
  *
@@ -23,6 +24,7 @@ export default function Adhoc({ view, engine }) {
     const ctrl = new AbortController();
     const root = ref.current;
     let styleEl = null;
+    if (a.fullscreen) document.body.classList.add("gf-adhoc-fs");
 
     (async () => {
       if (a.styleHref) {
@@ -50,9 +52,19 @@ export default function Adhoc({ view, engine }) {
       ctrl.abort();
       if (styleEl) styleEl.remove();
       if (root) root.replaceChildren();
+      if (a.fullscreen) document.body.classList.remove("gf-adhoc-fs");
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [key]);
 
-  return <div className="gf-adhoc gf-ui-block" ref={ref} aria-label={a && a.title ? a.title : "Interactive scene"} />;
+  const node = (
+    <div
+      className={`gf-adhoc gf-ui-block${a && a.fullscreen ? " fullscreen" : ""}`}
+      ref={ref}
+      aria-label={a && a.title ? a.title : "Interactive scene"}
+    />
+  );
+  // A fullscreen scene escapes the letterboxed frame (whose transform would
+  // otherwise contain a fixed child) by mounting at the document body.
+  return a && a.fullscreen ? createPortal(node, document.body) : node;
 }

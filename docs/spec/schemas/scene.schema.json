@@ -34,6 +34,7 @@
         "style": { "type": "string", "description": "Path to a CSS file injected while the scene runs." },
         "entry": { "type": "string", "description": "Named export to invoke; default the module's default export, else 'mount'." },
         "title": { "$ref": "common.schema.json#/$defs/text" },
+        "fullscreen": { "type": "boolean", "description": "If true, the scene takes the whole viewport (past letterboxing) and hides the player chrome (§14.1). Default false: a stage-sized surface." },
         "params": { "type": "object" },
         "reads": { "type": "array", "items": { "$ref": "common.schema.json#/$defs/id" } },
         "writes": { "type": "array", "items": { "$ref": "common.schema.json#/$defs/id" } },
