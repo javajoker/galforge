@@ -34,9 +34,25 @@
     { "say": "shelter", "id": "s04_007", "text": "@s04.shelter.002", "face": "sad" },
 
     { "choice": "@choice.offer.prompt", "id": "offer", "options": [
-      { "text": "@choice.offer.opt_cold", "set": { "order_lean": "+1", "chaos_lean": "+1" }, "jump": "#decide" },
-      { "text": "@choice.offer.opt_tempt", "set": { "order_lean": "+2" }, "jump": "#decide" }
+      { "text": "@choice.offer.opt_cold",  "set": { "order_lean": "+1", "chaos_lean": "+1" }, "jump": "#cold" },
+      { "text": "@choice.offer.opt_tempt", "set": { "order_lean": "+2" },                    "jump": "#tempt" },
+      { "text": "@choice.offer.opt_probe", "set": { "order_lean": "+1", "order_doubt": true }, "jump": "#probe" }
     ] },
+
+    { "label": "cold" },
+    { "say": "order", "id": "s04_008", "text": "@s04.order.cold", "face": "stern" },
+    { "say": "chaos", "id": "s04_010", "text": "@s04.chaos.cold", "face": "grin" },
+    { "jump": "#decide" },
+
+    { "label": "tempt" },
+    { "say": "order", "id": "s04_009", "text": "@s04.order.tempt", "face": "smile" },
+    { "say": "shelter", "id": "s04_011", "text": "@s04.shelter.tempt", "face": "worried" },
+    { "jump": "#decide" },
+
+    { "label": "probe" },
+    { "say": "order", "id": "s04_012", "text": "@s04.order.probe1", "face": "surprised" },
+    { "say": "order", "id": "s04_013", "text": "@s04.order.probe2", "face": "stern", "voice": "auto" },
+    { "jump": "#decide" },
 
     { "label": "decide" },
     { "narrate": "@s04.decide" },

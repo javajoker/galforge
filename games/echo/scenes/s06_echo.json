@@ -20,9 +20,15 @@
     { "narrate": "@s06.reveal" },
 
     { "say": "order", "id": "s06_002", "text": "@s06.order.002", "face": "sad" },
+    { "if": "aegis_revealed", "then": [
+      { "narrate": "@s06.aside.aegis" }
+    ] },
     { "say": "order", "id": "s06_003", "text": "@s06.order.003", "face": "neutral" },
     { "say": "order", "id": "s06_004", "text": "@s06.order.004", "face": "sad" },
     { "say": "order", "id": "s06_005", "text": "@s06.order.005", "face": "sad", "voice": "auto" },
+    { "if": "order_doubt", "then": [
+      { "say": "order", "id": "s06_006", "text": "@s06.order.doubt", "face": "surprised", "voice": "auto" }
+    ] },
 
     { "narrate": "@s06.turn" },
     { "hide": "order", "transition": "fade" },

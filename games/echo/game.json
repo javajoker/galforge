@@ -2,10 +2,10 @@
   "gvnf": "1.0",
   "id": "echo",
   "title": "@game.title",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "authors": ["GalForge galforge-generate"],
   "screen": { "width": 1920, "height": 1080 },
-  "locales": { "default": "zh-CN", "supported": ["zh-CN", "en"] },
+  "locales": { "default": "en", "supported": ["en", "zh-CN"] },
   "entry": "s01_order_hall",
   "voicePattern": "{speaker}/{line}",
   "text": { "speed": "normal", "autoDelayMs": 1400 },
@@ -17,7 +17,9 @@
     "order_lean": 0,
     "chaos_lean": 0,
     "shelter_lean": 0,
-    "saw_truth": false
+    "saw_truth": false,
+    "order_doubt": false,
+    "aegis_revealed": false
   },
   "endings": {
     "order_end": { "title": "@ending.order_end.title" },
@@ -29,6 +31,6 @@
     "cover": "cg_cover",
     "rating": "teen",
     "source": "ECHO.md",
-    "description": "近未来，一个被算法彻底理解的世界。你曾是系统的维护者，因一张1999年的旧照片被标记为『潜在异常体』。在秩序、混沌、庇护三大协议的拉扯中，ECHO计划真正的实验目标，是寻找一种连被完全理解之后仍能说出『不』的人类意识。四种命运，一个关于主体性的拒绝。"
+    "description": "A near-future where an invisible system understands everyone too well. You were one of its maintainers — until a grainy 1999 photograph flags you as a Potential Anomaly. Pulled between the Order, Chaos, and Shelter protocols, you learn the ECHO Project's real aim: to find a human consciousness that, even after being fully understood, can still say 'no.' Four fates; one refusal to be defined. English-first cut, with a full Simplified-Chinese track."
   }
 }

@@ -23,16 +23,24 @@
     { "say": "chaos", "id": "s02_005", "text": "@s02.chaos.005", "face": "laugh" },
 
     { "choice": "@choice.crack.prompt", "id": "crack", "options": [
-      { "text": "@choice.crack.opt_yes", "set": { "chaos_lean": "+2" }, "jump": "#believe" },
-      { "text": "@choice.crack.opt_no", "set": { "chaos_lean": "+1", "order_lean": "+1" }, "jump": "#doubt" }
+      { "text": "@choice.crack.opt_yes",   "set": { "chaos_lean": "+2" },                    "jump": "#believe" },
+      { "text": "@choice.crack.opt_no",    "set": { "chaos_lean": "+1", "order_lean": "+1" }, "jump": "#doubt" },
+      { "text": "@choice.crack.opt_probe", "set": { "chaos_lean": "+1" },                    "jump": "#probe" }
     ] },
 
     { "label": "believe" },
     { "say": "chaos", "id": "s02_006", "text": "@s02.chaos.believe", "face": "grin" },
+    { "say": "chaos", "id": "s02_009", "text": "@s02.chaos.believe2", "face": "laugh" },
     { "jump": "#out" },
 
     { "label": "doubt" },
     { "say": "chaos", "id": "s02_007", "text": "@s02.chaos.doubt", "face": "smug" },
+    { "say": "chaos", "id": "s02_010", "text": "@s02.chaos.doubt2", "face": "neutral" },
+    { "jump": "#out" },
+
+    { "label": "probe" },
+    { "say": "chaos", "id": "s02_011", "text": "@s02.chaos.probe1", "face": "smug" },
+    { "say": "chaos", "id": "s02_012", "text": "@s02.chaos.probe2", "face": "grin" },
     { "jump": "#out" },
 
     { "label": "out" },

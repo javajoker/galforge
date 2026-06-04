@@ -190,17 +190,17 @@ export class Engine {
   // ------------------------------------------------------------- asset paths
   asset(group, id) {
     const a = this.manifest[group] && this.manifest[group][id];
-    return a ? `${this.baseDir}/${a.path}` : null;
+    return a ? (/^https?:\/\//.test(a.path) ? a.path : `${this.baseDir}/${a.path}`) : null;
   }
   spriteBody(charId, outfit, pose) {
     const sp = this.manifest.sprites && this.manifest.sprites[charId];
     const b = sp && sp.bodies && sp.bodies[outfit] && sp.bodies[outfit][pose];
-    return b ? `${this.baseDir}/${b.path}` : null;
+    return b ? (/^https?:\/\//.test(b.path) ? b.path : `${this.baseDir}/${b.path}`)  : null;
   }
   spriteFace(charId, face) {
     const sp = this.manifest.sprites && this.manifest.sprites[charId];
     const f = sp && sp.faces && sp.faces[face];
-    return f ? `${this.baseDir}/${f.path}` : null;
+    return f ? (/^https?:\/\//.test(f.path) ? f.path : `${this.baseDir}/${f.path}`)  : null;
   }
   vol(kind) {
     const a = this.game.audio || {};

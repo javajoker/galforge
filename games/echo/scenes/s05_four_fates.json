@@ -18,6 +18,10 @@
       "else": [ { "narrate": "@s05.echo.shelter" } ]
     },
 
+    { "if": "order_doubt", "then": [
+      { "narrate": "@s05.doubt.aside" }
+    ] },
+
     { "choice": "@choice.fate.prompt", "id": "fate", "options": [
       { "text": "@choice.fate.order",   "set": { "route": "order" },   "jump": "#order" },
       { "text": "@choice.fate.chaos",   "set": { "route": "chaos" },   "jump": "#chaos" },

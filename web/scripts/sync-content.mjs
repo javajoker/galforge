@@ -19,6 +19,7 @@ const outDir = join(webRoot, "public", "content");
 
 // Source GVNF projects to bundle. Each entry: { id, from }.
 const SOURCES = [
+  { id: "echo", from: join(repoRoot, "games", "echo") },
   { id: "umbrella-share", from: join(repoRoot, "games", "umbrella-share") },
   { id: "aoi-after-school", from: join(repoRoot, "docs", "samples", "aoi-after-school") },
 ];

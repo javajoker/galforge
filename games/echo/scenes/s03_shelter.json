@@ -30,16 +30,24 @@
     { "set": { "saw_truth": true } },
 
     { "choice": "@choice.truth.prompt", "id": "truth", "options": [
-      { "text": "@choice.truth.opt_lost", "set": { "shelter_lean": "+1" }, "jump": "#lost" },
-      { "text": "@choice.truth.opt_warm", "set": { "shelter_lean": "+2" }, "jump": "#warm" }
+      { "text": "@choice.truth.opt_lost", "set": { "shelter_lean": "+1" },                          "jump": "#lost" },
+      { "text": "@choice.truth.opt_warm", "set": { "shelter_lean": "+2" },                          "jump": "#warm" },
+      { "text": "@choice.truth.opt_who",  "set": { "shelter_lean": "+1", "aegis_revealed": true },  "jump": "#who" }
     ] },
 
     { "label": "lost" },
     { "say": "shelter", "id": "s03_006", "text": "@s03.shelter.lost", "face": "sad" },
+    { "say": "shelter", "id": "s03_009", "text": "@s03.shelter.lost2", "face": "worried" },
     { "jump": "#after" },
 
     { "label": "warm" },
     { "say": "shelter", "id": "s03_007", "text": "@s03.shelter.warm", "face": "smile", "voice": "auto" },
+    { "say": "shelter", "id": "s03_010", "text": "@s03.shelter.warm2", "face": "smile" },
+    { "jump": "#after" },
+
+    { "label": "who" },
+    { "say": "shelter", "id": "s03_008", "text": "@s03.shelter.who1", "face": "sad", "voice": "auto" },
+    { "say": "shelter", "id": "s03_011", "text": "@s03.shelter.who2", "face": "sad" },
     { "jump": "#after" },
 
     { "label": "after" },
