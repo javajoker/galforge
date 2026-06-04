@@ -1,0 +1,73 @@
+{
+  "gvnf": "1.0",
+  "id": "s05_four_fates",
+  "stageMode": "auto",
+  "cast": ["order", "chaos", "shelter"],
+  "_note": "第五章 四种命运. The decision. A 4-option choice; Order/Chaos/Shelter resolve to endings on the spot, Refuse whites out the system and jumps to the epilogue s06. A flavour `if` on the leans colours which voice echoes loudest.",
+  "script": [
+    { "bg": "mirror_gallery", "transition": { "type": "dissolve", "duration": 700 } },
+    { "bgm": "bgm_mirror", "fade": 600 },
+
+    { "narrate": "@s05.prompt.intro" },
+
+    { "if": "order_lean >= chaos_lean && order_lean >= shelter_lean",
+      "then": [ { "narrate": "@s05.echo.order" } ],
+      "elif": [
+        { "if": "chaos_lean >= shelter_lean", "then": [ { "narrate": "@s05.echo.chaos" } ] }
+      ],
+      "else": [ { "narrate": "@s05.echo.shelter" } ]
+    },
+
+    { "if": "order_doubt", "then": [
+      { "narrate": "@s05.doubt.aside" }
+    ] },
+
+    { "choice": "@choice.fate.prompt", "id": "fate", "options": [
+      { "text": "@choice.fate.order",   "set": { "route": "order" },   "jump": "#order" },
+      { "text": "@choice.fate.chaos",   "set": { "route": "chaos" },   "jump": "#chaos" },
+      { "text": "@choice.fate.shelter", "set": { "route": "shelter" }, "jump": "#shelter" },
+      { "text": "@choice.fate.refuse",  "set": { "route": "refuse" },  "jump": "#refuse" }
+    ] },
+
+    { "label": "order" },
+    { "cg": "cg_order_throne", "transition": "fade" },
+    { "narrate": "@s05.order.1" },
+    { "narrate": "@s05.order.2" },
+    { "cg": null },
+    { "show": "order", "at": "center", "outfit": "system", "face": "smug", "transition": "dissolve" },
+    { "say": "order", "id": "s05_001", "text": "@s05.order.line", "face": "smug", "voice": "auto" },
+    { "end": "order_end" },
+
+    { "label": "chaos" },
+    { "cg": "cg_chaos_collapse", "transition": "fade" },
+    { "se": "se_shatter" },
+    { "narrate": "@s05.chaos.1" },
+    { "narrate": "@s05.chaos.2" },
+    { "cg": null },
+    { "show": "chaos", "at": "center", "outfit": "street", "face": "laugh", "transition": "dissolve" },
+    { "say": "chaos", "id": "s05_002", "text": "@s05.chaos.line", "face": "laugh", "voice": "auto" },
+    { "end": "chaos_end" },
+
+    { "label": "shelter" },
+    { "cg": "cg_shelter_sleep", "transition": "fade" },
+    { "narrate": "@s05.shelter.1" },
+    { "narrate": "@s05.shelter.2" },
+    { "cg": null },
+    { "show": "shelter", "at": "center", "outfit": "gown", "face": "smile", "transition": "dissolve" },
+    { "say": "shelter", "id": "s05_003", "text": "@s05.shelter.line", "face": "smile", "voice": "auto" },
+    { "end": "shelter_end" },
+
+    { "label": "refuse" },
+    { "narrate": "@s05.refuse.1" },
+    { "narrate": "@s05.refuse.2" },
+    { "se": "se_glitch" },
+    { "narrate": "@s05.refuse.3" },
+    { "bgm": "bgm_collapse", "fade": 200 },
+    { "se": "se_shatter" },
+    { "shake": { "intensity": "heavy", "duration": 700 } },
+    { "flash": { "color": "#ffffff", "duration": 300 } },
+    { "bg": "white_void", "transition": { "type": "fadeWhite", "duration": 1200 } },
+    { "narrate": "@s05.refuse.4" },
+    { "jump": "s06_echo" }
+  ]
+}

@@ -6,21 +6,29 @@ import { contentBase } from "./config.js";
 export function useEngine(gameId) {
   const [view, setView] = useState(null);
   const [error, setError] = useState(null);
+  const [progress, setProgress] = useState(null); // {loaded,total} during media preload
   const engineRef = useRef(null);
 
   useEffect(() => {
     let cancelled = false;
     setView(null);
     setError(null);
+    setProgress(null);
     const eng = new Engine(contentBase(gameId));
     engineRef.current = eng;
     if (import.meta.env.DEV) window.__gf = eng; // dev-only debug handle
     const unsub = eng.subscribe((v) => {
       if (!cancelled) setView(v);
     });
-    eng.boot().catch((e) => {
-      if (!cancelled) setError(e && e.message ? e.message : String(e));
-    });
+    eng
+      .boot({
+        onProgress: (p) => {
+          if (!cancelled) setProgress(p);
+        },
+      })
+      .catch((e) => {
+        if (!cancelled) setError(e && e.message ? e.message : String(e));
+      });
     return () => {
       cancelled = true;
       unsub();
@@ -28,7 +36,7 @@ export function useEngine(gameId) {
     };
   }, [gameId]);
 
-  return { view, error, engine: engineRef.current };
+  return { view, error, progress, engine: engineRef.current };
 }
 
 /* True when the viewport is taller than it is wide ("vertical screen").

@@ -22,6 +22,23 @@ function hashHue(s) {
   return h;
 }
 
+function assetURL(base, path) {
+  if (!path) return null;
+  return /^https?:\/\//.test(path) ? path : `${base}/${path}`;
+}
+
+// Resolve the cover image declared by game.meta.cover (a cg asset id) through
+// the resource manifest. Falls back to the first cg tagged "gallery", then the
+// first cg of any kind, so a title without an explicit cover still gets art.
+function resolveCoverURL(base, game, manifest) {
+  const cg = (manifest && manifest.cg) || {};
+  const coverId = (game.meta && game.meta.cover) || null;
+  let entry = coverId && cg[coverId];
+  if (!entry) entry = Object.values(cg).find((c) => (c.tags || []).includes("gallery"));
+  if (!entry) entry = Object.values(cg)[0];
+  return entry ? assetURL(base, entry.path) : null;
+}
+
 async function loadGameMeta(id) {
   const base = contentBase(id);
   const game = await fetchJSON(`${base}/game.json`);
@@ -31,12 +48,19 @@ async function loadGameMeta(id) {
   } catch {
     /* title may be a literal */
   }
+  let cover = null;
+  try {
+    cover = resolveCoverURL(base, game, await fetchJSON(`${base}/resources/manifest.json`));
+  } catch {
+    /* no manifest / no cover — the gradient fallback is used */
+  }
   const resolve = (s) => (typeof s === "string" && s[0] === "@" ? strings[s.slice(1)] || s.slice(1) : s);
   return {
     id,
     title: resolve(game.title) || id,
     rating: game.meta && game.meta.rating,
     locales: (game.locales && game.locales.supported) || [],
+    cover,
   };
 }
 
@@ -79,6 +103,18 @@ export default function Menu() {
                 background: `linear-gradient(135deg,hsl(${hashHue(g.id)} 50% 32%),hsl(${(hashHue(g.id) + 50) % 360} 45% 18%))`,
               }}
             >
+              {g.cover ? (
+                <img
+                  className="gf-card-cover-img"
+                  src={g.cover}
+                  alt={`${g.title} cover`}
+                  loading="lazy"
+                  onError={(e) => {
+                    // missing bitmap → drop the broken img, revealing the gradient
+                    e.currentTarget.style.display = "none";
+                  }}
+                />
+              ) : null}
               <span className="gf-card-id">{g.id}</span>
             </div>
             <div className="gf-card-body">

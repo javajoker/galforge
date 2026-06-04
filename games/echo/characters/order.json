@@ -1,0 +1,13 @@
+{
+  "gvnf": "1.0",
+  "id": "order",
+  "name": "@char.order.name",
+  "nameColor": "#6f8fd6",
+  "sprite": "order",
+  "defaultOutfit": "system",
+  "defaultPose": "stand",
+  "defaultFace": "neutral",
+  "defaultPosition": "center",
+  "voice": { "default": "auto" },
+  "tags": ["faction", "order", "antagonist"]
+}

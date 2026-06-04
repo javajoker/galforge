@@ -1,0 +1,54 @@
+{
+  "gvnf": "1.0",
+  "id": "s02_the_crack",
+  "stageMode": "auto",
+  "cast": ["chaos"],
+  "_note": "第二章 裂缝. Meet CHAOS in the infrastructure pipes. Minor choice tunes chaos_lean / order_lean. Leads to the data graveyard, then s03.",
+  "script": [
+    { "bg": "pipes", "transition": { "type": "pixelate", "duration": 900 } },
+    { "bgm": "bgm_underground", "fade": 1400 },
+
+    { "narrate": "@s02.intro" },
+    { "narrate": "@s02.graffiti" },
+    { "narrate": "@s02.tag" },
+    { "se": "se_spray" },
+    { "narrate": "@s02.voice" },
+
+    { "show": "chaos", "at": "right", "outfit": "street", "face": "grin", "transition": "dissolve" },
+    { "say": "chaos", "id": "s02_001", "text": "@s02.chaos.001", "face": "grin", "voice": "auto" },
+    { "say": "chaos", "id": "s02_002", "text": "@s02.chaos.002", "face": "smug" },
+    { "narrate": "@s02.chaos.spray" },
+    { "say": "chaos", "id": "s02_003", "text": "@s02.chaos.003", "face": "neutral" },
+    { "say": "chaos", "id": "s02_004", "text": "@s02.chaos.004", "face": "grin" },
+    { "say": "chaos", "id": "s02_005", "text": "@s02.chaos.005", "face": "laugh" },
+
+    { "choice": "@choice.crack.prompt", "id": "crack", "options": [
+      { "text": "@choice.crack.opt_yes",   "set": { "chaos_lean": "+2" },                    "jump": "#believe" },
+      { "text": "@choice.crack.opt_no",    "set": { "chaos_lean": "+1", "order_lean": "+1" }, "jump": "#doubt" },
+      { "text": "@choice.crack.opt_probe", "set": { "chaos_lean": "+1" },                    "jump": "#probe" }
+    ] },
+
+    { "label": "believe" },
+    { "say": "chaos", "id": "s02_006", "text": "@s02.chaos.believe", "face": "grin" },
+    { "say": "chaos", "id": "s02_009", "text": "@s02.chaos.believe2", "face": "laugh" },
+    { "jump": "#out" },
+
+    { "label": "doubt" },
+    { "say": "chaos", "id": "s02_007", "text": "@s02.chaos.doubt", "face": "smug" },
+    { "say": "chaos", "id": "s02_010", "text": "@s02.chaos.doubt2", "face": "neutral" },
+    { "jump": "#out" },
+
+    { "label": "probe" },
+    { "say": "chaos", "id": "s02_011", "text": "@s02.chaos.probe1", "face": "smug" },
+    { "say": "chaos", "id": "s02_012", "text": "@s02.chaos.probe2", "face": "grin" },
+    { "jump": "#out" },
+
+    { "label": "out" },
+    { "say": "chaos", "id": "s02_008", "text": "@s02.chaos.lead", "face": "grin", "voice": "auto" },
+    { "bg": "data_graveyard", "transition": { "type": "dissolve", "duration": 1000 } },
+    { "hide": "chaos", "transition": { "type": "slide", "direction": "right" } },
+    { "narrate": "@s02.graveyard.1" },
+    { "narrate": "@s02.graveyard.2" },
+    { "jump": "s03_shelter" }
+  ]
+}

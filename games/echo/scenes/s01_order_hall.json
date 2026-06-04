@@ -1,0 +1,41 @@
+{
+  "gvnf": "1.0",
+  "id": "s01_order_hall",
+  "stageMode": "auto",
+  "cast": [],
+  "_note": "第一章 秩序的裂痕. Pure-narration opening; ORDER is a screen presence, no sprite. The CHAOS pop-up is an item close-up; the 1999 photo is a CG glimpse. Ends by fleeing into s02.",
+  "script": [
+    { "bg": "order_hall", "transition": { "type": "pixelate", "duration": 1200 } },
+    { "bgm": "bgm_order", "fade": 1600 },
+
+    { "narrate": "@s01.intro.world" },
+    { "narrate": "@s01.intro.tired" },
+    { "narrate": "@s01.intro.echo" },
+
+    { "narrate": "@s01.hall" },
+    { "narrate": "@s01.hall.order_screen" },
+
+    { "se": "se_glitch" },
+    { "narrate": "@s01.popup.appear" },
+    { "closeup": "glitch_window", "caption": "@s01.popup.caption", "zoom": 1.25, "dim": 0.72, "transition": { "type": "pixelate", "duration": 400 } },
+    { "wait": 700 },
+    { "narrate": "@s01.popup.signed" },
+    { "closeup": null },
+
+    { "cg": "cg_photo_1999", "transition": { "type": "ripple", "duration": 900 } },
+    { "se": "se_heartbeat" },
+    { "narrate": "@s01.photo.flash" },
+    { "narrate": "@s01.photo.feeling" },
+    { "cg": null, "transition": { "type": "ripple", "duration": 700 } },
+
+    { "se": "se_alarm" },
+    { "flash": { "color": "#ff3b3b", "duration": 220 } },
+    { "shake": { "intensity": "heavy", "duration": 500 } },
+    { "bgm": "bgm_alarm", "fade": 300 },
+    { "narrate": "@s01.alarm.locked" },
+    { "narrate": "@s01.alarm.flagged" },
+    { "narrate": "@s01.alarm.flee" },
+
+    { "jump": "s02_the_crack" }
+  ]
+}

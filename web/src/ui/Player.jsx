@@ -142,7 +142,7 @@ function Controls({ view, engine, auto, skip, onAuto, onSkip, onPanel }) {
 /* ======================================================================= */
 export default function Player() {
   const { gameId } = useParams();
-  const { view, error, engine } = useEngine(gameId);
+  const { view, error, progress, engine } = useEngine(gameId);
   const portrait = useOrientation();
   useAudio(view);
 
@@ -245,9 +245,19 @@ export default function Player() {
     );
   }
   if (!view) {
+    const pct = progress && progress.total ? Math.round((progress.loaded / progress.total) * 100) : 0;
+    const preloading = !!(progress && progress.total);
     return (
       <div className="gf-boot">
-        <div className="gf-boot-card">Loading…</div>
+        <div className="gf-boot-card">
+          <div className="gf-boot-title">Loading “{gameId}”…</div>
+          <div className="gf-progress" role="progressbar" aria-valuenow={pct} aria-valuemin={0} aria-valuemax={100}>
+            <div className={`gf-progress-bar${preloading ? "" : " indeterminate"}`} style={preloading ? { width: pct + "%" } : undefined} />
+          </div>
+          <div className="gf-progress-label">
+            {preloading ? `Preloading assets · ${progress.loaded} / ${progress.total} · ${pct}%` : "Reading script…"}
+          </div>
+        </div>
       </div>
     );
   }
