@@ -8,3 +8,6 @@ __pycache__/
 *.swp
 .idea/
 .vscode/
+
+# Node (web app ignores live in web/.gitignore)
+node_modules/

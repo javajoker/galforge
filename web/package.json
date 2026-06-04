@@ -1,0 +1,24 @@
+{
+  "name": "galforge-web",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "description": "GalForge — React reference runtime for GVNF v1.0 visual novels. Route-based game selection (no querystring); builds to a self-contained static site.",
+  "scripts": {
+    "sync": "node scripts/sync-content.mjs",
+    "predev": "node scripts/sync-content.mjs",
+    "dev": "vite",
+    "prebuild": "node scripts/sync-content.mjs",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-router-dom": "^6.26.2"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^4.3.4",
+    "vite": "^5.4.11"
+  }
+}

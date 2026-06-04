@@ -9,6 +9,12 @@ variables & branching (§9), localization (§1.3/§4), voice (§3.4), and save/l
 It is the **canonical playback semantics** for the format — when a runtime's behaviour and
 this one disagree, this one is right (or the spec is, and both should be fixed).
 
+> **Want a build you can ship?** See [`../web/`](../web/) — a React + Vite app that
+> reuses these semantics, selects games by **route** (no query string), adds a
+> **responsive portrait single-character** mode, and builds to a self-contained
+> static site. This `runtime/` is the zero-dependency canonical reference; `web/`
+> is the publishable player.
+
 ## Run it
 
 Any static file server works (it `fetch`es the project files, so `file://` won't work):
