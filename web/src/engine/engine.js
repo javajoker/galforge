@@ -68,6 +68,7 @@ export class Engine {
     }
     this.voicePattern = this.game.voicePattern || "{speaker}/{line}";
     this.defaultTransitions = this.game.transitions || {};
+    this.uiResolved = this.buildUI();
     await this.loadAllScenes();
     await this.loadAllChars();
     // Preload media so the first frame of every scene paints without pop-in.
@@ -693,6 +694,32 @@ export class Engine {
     }
   }
 
+  // ----------------------------------------------------- UI hints / layouts
+  // Resolve game.json `ui` (a web-runtime extension) once at boot. A game MAY
+  // declare a default stage layout (`ui.layout`) and/or register its own
+  // *custom* layouts (`ui.layouts`), each pointing at a developer-authored
+  // stylesheet that the runtime injects — letting developers design their own
+  // stage layout without forking the player. See ui/layouts.js.
+  buildUI() {
+    const ui = this.game && this.game.ui;
+    if (!ui || typeof ui !== "object") return null;
+    const out = { layout: typeof ui.layout === "string" ? ui.layout : null };
+    if (Array.isArray(ui.layouts)) {
+      out.layouts = ui.layouts
+        .filter((l) => l && typeof l === "object" && typeof l.id === "string")
+        .map((l) => ({
+          id: l.id,
+          name: typeof l.name === "string" ? l.name : l.id,
+          short: typeof l.short === "string" ? l.short : null,
+          desc: typeof l.desc === "string" ? l.desc : null,
+          interaction: l.interaction === "dock" ? "dock" : "overlay",
+          // game-relative href (or absolute URL) → absolute, like adhoc styles
+          styleHref: typeof l.style === "string" ? this.adhocURL(l.style) : null,
+        }));
+    }
+    return out;
+  }
+
   doEnd(cmd) {
     const id = cmd.end;
     let title = "";
@@ -922,6 +949,9 @@ export class Engine {
       locale: this.locale,
       defaultLocale: this.defaultLocale,
       locales: this.game.locales.supported,
+      // UI hints (web-runtime extension, lint-safe): default stage layout +
+      // any developer-registered custom layouts, resolved at boot. See buildUI().
+      ui: this.uiResolved || null,
       fx: this.fx.slice(),
       backlog: this.backlog,
       seq: ++this.viewSeq,
