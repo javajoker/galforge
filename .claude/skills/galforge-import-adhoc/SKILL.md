@@ -22,9 +22,16 @@ game variables and takes one of its **declared exits**, rejoining the common flo
 the *ways it can leave are fixed up front*, so the flow graph stays static, lint-able, and
 deterministic.
 
-> **References.** [`docs/spec/script-standard.md` §14](../../../docs/spec/script-standard.md)
-> (read §14.1–§14.7). Schema: [`docs/spec/schemas/scene.schema.json`](../../../docs/spec/schemas/scene.schema.json)
-> (`$defs.adhoc`, `$defs.adhocExit`). Worked example:
+> **Contract (read first).** [`docs/spec/script-standard.md` §14](../../../docs/spec/script-standard.md)
+> (normative; read §14.1–§14.7) and the developer-facing summary +
+> module function spec in
+> [`docs/spec/developer-extensions.md` §3](../../../docs/spec/developer-extensions.md). Schema:
+> [`docs/spec/schemas/scene.schema.json`](../../../docs/spec/schemas/scene.schema.json)
+> (`$defs.adhoc`, `$defs.adhocExit`).
+> **Worked examples.** Runnable demo (a generic, params-driven quiz):
+> [`games/extensions-demo/adhoc/quiz.js`](../../../games/extensions-demo/adhoc/quiz.js) +
+> [`scenes/q_quiz.json`](../../../games/extensions-demo/scenes/q_quiz.json) (+ its
+> [`README`](../../../games/extensions-demo/README.md)); also
 > [`docs/samples/aoi-after-school/scenes/s01b_desk.json`](../../../docs/samples/aoi-after-school/scenes/s01b_desk.json)
 > + [`adhoc/keepsake.js`](../../../docs/samples/aoi-after-school/adhoc/keepsake.js) /
 > [`keepsake.css`](../../../docs/samples/aoi-after-school/adhoc/keepsake.css).

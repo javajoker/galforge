@@ -1,0 +1,31 @@
+{
+  "gvnf": "1.0",
+  "id": "s01_intro",
+  "stageMode": "auto",
+  "cast": ["guide"],
+  "_note": "Drives the demo: introduces the two developer extensions, then `call`s the adhoc quiz (q_quiz) and branches on its written-back `passed` result before ending.",
+  "script": [
+    { "bg": "console_room", "transition": { "type": "fade", "duration": 700 } },
+    { "show": "guide", "at": "center", "face": "neutral", "transition": "dissolve" },
+
+    { "say": "guide", "id": "s01_001", "text": "@s01.guide.welcome", "face": "smile" },
+    { "say": "guide", "id": "s01_002", "text": "@s01.guide.layout" },
+    { "say": "guide", "id": "s01_003", "text": "@s01.guide.adhoc", "face": "neutral" },
+    { "say": "guide", "id": "s01_004", "text": "@s01.guide.start", "face": "smile" },
+
+    { "_comment": "Hand off to the adhoc quiz module; its result writes quiz_score + passed and returns here.",
+      "call": "q_quiz" },
+
+    { "if": "passed == true",
+      "then": [
+        { "say": "guide", "id": "s01_pass", "text": "@s01.guide.pass", "face": "smile" }
+      ],
+      "else": [
+        { "say": "guide", "id": "s01_fail", "text": "@s01.guide.fail", "face": "neutral" }
+      ]
+    },
+
+    { "say": "guide", "id": "s01_005", "text": "@s01.guide.outro", "face": "smile" },
+    { "end": "cleared" }
+  ]
+}

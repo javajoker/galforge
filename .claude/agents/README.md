@@ -72,4 +72,6 @@ re-validated on the same lint gate. These run on demand, independent of the sour
   puzzle) into `adhoc/` + a `scenes/<id>.json` `adhoc` block (Script Standard §14).
 
 The `galforge-scene-writer` recognises both and leaves any developer `ui` block / adhoc scene
-intact when it finalises `game.json` and scenes.
+intact when it finalises `game.json` and scenes. The contract for both extension points is
+specified in [`docs/spec/developer-extensions.md`](../../docs/spec/developer-extensions.md), with
+a runnable demo in [`games/extensions-demo/`](../../games/extensions-demo/).

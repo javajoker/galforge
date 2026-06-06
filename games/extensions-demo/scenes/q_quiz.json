@@ -1,0 +1,51 @@
+{
+  "gvnf": "1.0",
+  "id": "q_quiz",
+  "kind": "adhoc",
+  "_note": "Adhoc scene (Script Standard §14) wiring the developer module adhoc/quiz.js. `call`ed from s01_intro as a subroutine: both real exits `return: true`, so when the quiz resolves the engine resumes s01_intro at the next command, where an `if` branches on `passed`. The module's result writes `quiz_score`+`passed` back into the flow. `fallback` keeps the game completable on a runtime that can't run the module (it takes the fail exit). The questions/passMark/exit ids are all data in `params`, so the same generic module is reusable.",
+  "adhoc": {
+    "module": "adhoc/quiz.js",
+    "style": "adhoc/quiz.css",
+    "title": "@quiz.title",
+    "params": {
+      "passMark": 2,
+      "scoreVar": "quiz_score",
+      "passVar": "passed",
+      "passExit": "pass",
+      "failExit": "fail",
+      "questions": [
+        {
+          "q": "@quiz.q1",
+          "options": [
+            { "t": "@quiz.q1.a", "correct": true },
+            { "t": "@quiz.q1.b" },
+            { "t": "@quiz.q1.c" }
+          ]
+        },
+        {
+          "q": "@quiz.q2",
+          "options": [
+            { "t": "@quiz.q2.a" },
+            { "t": "@quiz.q2.b", "correct": true },
+            { "t": "@quiz.q2.c" }
+          ]
+        },
+        {
+          "q": "@quiz.q3",
+          "options": [
+            { "t": "@quiz.q3.a" },
+            { "t": "@quiz.q3.b" },
+            { "t": "@quiz.q3.c", "correct": true }
+          ]
+        }
+      ]
+    },
+    "reads": ["quiz_score", "passed"],
+    "writes": ["quiz_score", "passed"],
+    "exits": [
+      { "id": "pass", "return": true },
+      { "id": "fail", "return": true }
+    ],
+    "fallback": { "exit": "fail", "set": { "passed": false, "quiz_score": 0 } }
+  }
+}

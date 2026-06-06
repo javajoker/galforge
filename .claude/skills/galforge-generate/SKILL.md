@@ -119,7 +119,10 @@ they are *imported* and wired in by a dedicated skill, then re-validated with `g
 | An **adhoc scene** (a JS module for a beat the §8 grammar can't model — minigame/map/puzzle) | [`galforge-import-adhoc`](../galforge-import-adhoc/SKILL.md) | `adhoc/<name>.js` (+ css) + a `scenes/<id>.json` `adhoc` block (§14), reached by `call`/`jump` |
 
 Both are safe to run **before, during, or after** generation; both end on the same lint gate.
-When generating, the scene-writer leaves any developer `ui` block / adhoc scene intact.
+When generating, the scene-writer leaves any developer `ui` block / adhoc scene intact. The
+contract for both is specified in
+[`docs/spec/developer-extensions.md`](../../../docs/spec/developer-extensions.md), with a
+runnable demo in [`games/extensions-demo/`](../../../games/extensions-demo/).
 
 ## Notes for the conductor
 

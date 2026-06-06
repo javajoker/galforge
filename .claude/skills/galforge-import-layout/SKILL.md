@@ -20,11 +20,15 @@ web runtime injects the stylesheet, adds the layout to the player's **Layout** p
 *Custom (this game)*), and toggles it on by setting `data-layout="<id>"` on the stage root —
 no player fork. This is the layout-level counterpart to the §14 adhoc *scene* escape hatch.
 
-> **References.** Web-runtime behaviour & the zone-class contract:
-> [`web/README.md` › *Developer (adhoc) layouts*](../../../web/README.md). Worked examples:
+> **Contract (read first).**
+> [`docs/spec/developer-extensions.md` §2](../../../docs/spec/developer-extensions.md) — the
+> authoritative `ui.layouts` + `data-layout` scoping + zone-class API. Web-runtime detail:
+> [`web/README.md` › *Developer (adhoc) layouts*](../../../web/README.md).
+> **Worked examples.** Runnable demo:
+> [`games/extensions-demo/ui/layouts/visor.css`](../../../games/extensions-demo/ui/layouts/visor.css)
+> (+ its [`README`](../../../games/extensions-demo/README.md)); also
 > [`docs/samples/aoi-after-school/ui/layouts/scrapbook.css`](../../../docs/samples/aoi-after-school/ui/layouts/scrapbook.css)
-> (+ that game's `ui` block) and
-> [`games/umbrella-share/ui/layouts/spotlight.css`](../../../games/umbrella-share/ui/layouts/spotlight.css).
+> and [`games/umbrella-share/ui/layouts/spotlight.css`](../../../games/umbrella-share/ui/layouts/spotlight.css).
 > Engine resolution: `web/src/ui/layouts.js`, `web/src/engine/engine.js` (`buildUI`).
 
 ## 0. Intake — establish before wiring

@@ -1,0 +1,22 @@
+{
+  "gvnf": "1.0",
+  "_note": "Tiny work-order for the extensions demo. Paths illustrative; no binaries shipped (the runtime draws placeholder sprites). Only assets actually referenced are declared, so the project lints clean under --strict (no unused-asset warnings).",
+
+  "backgrounds": {
+    "console_room": { "path": "bg/console_room.webp", "w": 1920, "h": 1080 }
+  },
+
+  "sprites": {
+    "guide": {
+      "anchor": { "x": 0.5, "y": 1.0 },
+      "baseScale": 1.0,
+      "bodies": {
+        "default": { "stand": { "path": "char/guide/body/default_stand.png", "w": 700, "h": 1500 } }
+      },
+      "faces": {
+        "neutral": { "path": "char/guide/face/neutral.png", "w": 300, "h": 320, "offset": { "x": 0, "y": 120 } },
+        "smile":   { "path": "char/guide/face/smile.png",   "w": 300, "h": 320, "offset": { "x": 0, "y": 120 } }
+      }
+    }
+  }
+}

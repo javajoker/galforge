@@ -1,0 +1,68 @@
+/* quiz — styling for the adhoc-scene module adhoc/quiz.js.
+ *
+ * Injected by the runtime while the scene runs (scene `adhoc.style`) and removed
+ * on exit. Scoped under `.gx-quiz` (the class the module adds to `ctx.root`) so it
+ * cannot leak into the GVNF player UI. An adhoc scene owns its own look — this is
+ * a clean tactical-console card, matching the demo's `visor` layout but free to be
+ * anything. The module builds the DOM (HTML5) in JS; this file only styles it. */
+
+.gx-quiz {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+  padding: 6%;
+  background: radial-gradient(120% 100% at 50% 0%, #06343322, #02080c 70%);
+  font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+  color: #d6fbf7;
+}
+
+.gx-quiz-hud {
+  font: 600 12px/1 ui-monospace, "SF Mono", Menlo, monospace;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: #46f2e6;
+  opacity: 0.85;
+}
+
+.gx-quiz-card {
+  width: min(560px, 92%);
+  padding: clamp(20px, 3.2vw, 34px);
+  border-radius: 6px;
+  background: linear-gradient(180deg, #07242899, #03121566);
+  border: 1px solid #46f2e655;
+  box-shadow: 0 0 30px #46f2e622, inset 0 0 40px #04282855;
+  animation: gx-quiz-in 0.4s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+@keyframes gx-quiz-in {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: none; }
+}
+
+.gx-quiz-q {
+  margin: 0 0 20px;
+  font-size: clamp(16px, 2.1vw, 21px);
+  line-height: 1.5;
+  color: #eafffc;
+}
+
+.gx-quiz-opts { display: flex; flex-direction: column; gap: 10px; }
+.gx-quiz-opt {
+  text-align: left;
+  padding: 13px 17px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 15px;
+  color: #d6fbf7;
+  background: #0a2c2e66;
+  border: 1px solid #46f2e640;
+  transition: transform 0.12s ease, background 0.2s ease, border-color 0.2s ease;
+}
+.gx-quiz-opt:hover {
+  background: #0e3d4099;
+  border-color: #46f2e6;
+  transform: translateX(4px);
+}

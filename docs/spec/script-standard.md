@@ -4,7 +4,7 @@
 
 **Spec version:** 1.0 · **Date:** 2026-06-03 · **Status:** Draft (normative)
 
-> Companion: [Whitepaper](../whitepaper.md) · [PRD](../PRD.md) · [JSON Schemas](schemas/) · [Sample game](../samples/)
+> Companion: [Whitepaper](../whitepaper.md) · [PRD](../PRD.md) · [JSON Schemas](schemas/) · [Developer extensions](developer-extensions.md) · [Sample game](../samples/)
 
 ---
 
@@ -923,6 +923,11 @@ a **result** that is written back into game variables and hands control to one o
 Adhoc scenes are a *bounded* escape hatch: the module is free inside its own frame, but the
 ways it can leave are fixed up front — so the flow graph stays static, lint-able, and
 deterministic (§10), and the result is *set back into* the ordinary script flow.
+
+> A developer-facing summary of this section (alongside the *layout*-level extension — a
+> custom stage layout that re-skins the normal play screen, which is a web-runtime extension,
+> not core) is in [Developer extensions](developer-extensions.md). For re-styling the ordinary
+> screen rather than adding a new beat, reach for a custom layout, not an adhoc scene.
 
 ### 14.1 An adhoc scene file
 
