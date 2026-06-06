@@ -23,15 +23,23 @@
   background: radial-gradient(ellipse 64% 72% at 50% 40%, transparent 42%, rgba(2, 3, 8, 0.86) 100%);
 }
 
-/* spotlight the active speaker: fade the partner out, centre + enlarge the lit one */
-.gf-stage[data-layout="spotlight"] .gf-slot.dim {
-  opacity: 0;
-}
-.gf-stage:not(.portrait)[data-layout="spotlight"] .gf-slot.active {
+/* Every sprite shares the centre spotlight; only the active speaker is lit and
+ * the others fade fully out. Centring *all* slots (not just the active one) is
+ * what keeps switches smooth: if only `.active` were centred, the outgoing
+ * speaker would snap back to its left/right side and fade out there — a flash on
+ * that side every turn. With all slots centred, a switch simply cross-fades the
+ * old speaker into the new one in place. */
+.gf-stage:not(.portrait)[data-layout="spotlight"] .gf-slot {
   left: 50%;
   right: auto;
-  transform: translateX(-50%);
-  height: 96%;
+  transform: translateX(-50%) scale(var(--spot, 0.97));
+  transition: opacity 0.3s ease, filter 0.3s ease, transform 0.3s ease;
+}
+.gf-stage:not(.portrait)[data-layout="spotlight"] .gf-slot.active {
+  --spot: 1; /* a subtle, transitioned enlarge for the lit speaker — never jumps */
+}
+.gf-stage[data-layout="spotlight"] .gf-slot.dim {
+  opacity: 0;
 }
 
 /* the line, in a floating card accented with the speaker's colour */
