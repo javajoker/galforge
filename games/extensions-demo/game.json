@@ -1,0 +1,38 @@
+{
+  "gvnf": "1.0",
+  "id": "extensions_demo",
+  "title": "@game.title",
+  "version": "1.0.0",
+  "authors": ["GalForge — developer-extensions demo"],
+  "screen": { "width": 1920, "height": 1080 },
+  "locales": { "default": "en", "supported": ["en"] },
+  "entry": "s01_intro",
+  "text": { "speed": "normal", "autoDelayMs": 1200 },
+  "audio": { "bgm": 0.8, "se": 0.9, "voice": 1.0 },
+  "stage": { "mode": "auto", "emphasis": { "dim": 0.55, "narration": "keep" } },
+  "ui": {
+    "layout": "adv",
+    "layouts": [
+      {
+        "id": "visor",
+        "name": "Visor HUD (custom)",
+        "short": "Visor",
+        "desc": "A developer-imported stage layout: a cyan tactical HUD with corner brackets, scanlines and a glowing readout panel for the line.",
+        "style": "ui/layouts/visor.css",
+        "interaction": "overlay"
+      }
+    ]
+  },
+  "transitions": { "bg": "dissolve", "char": "dissolve", "cg": "fade" },
+  "variables": {
+    "quiz_score": 0,
+    "passed": false
+  },
+  "endings": {
+    "cleared": { "title": "@ending.cleared.title" }
+  },
+  "meta": {
+    "rating": "all-ages",
+    "description": "A tiny GalForge demo that shows how the galforge-import-layout and galforge-import-adhoc skills wire developer-built presentation into a project: a custom stage layout (`visor`, registered in ui.layouts) and an adhoc-scene quiz module (§14). See README.md."
+  }
+}

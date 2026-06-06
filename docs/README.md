@@ -15,6 +15,7 @@ by schema, and played by any conforming runtime (web, Ren'Py exporter, Unity, et
 | 2 | [PRD](PRD.md) | Product requirements: personas, features, business rules, metrics |
 | 3 | [Script Standard (GVNF v1.0)](spec/script-standard.md) | The normative data & script format |
 | 3a | [JSON Schemas](spec/schemas/) | Machine-validatable schemas for every file type |
+| 3b | [Developer extensions](spec/developer-extensions.md) | Custom stage layouts + adhoc scenes: how a developer hands hand-built presentation to a project |
 | 4 | [Sample game: *Aoi After School*](samples/) | A complete, valid, runnable-shape example |
 
 ## Reading order

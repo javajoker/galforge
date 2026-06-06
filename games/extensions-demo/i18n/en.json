@@ -1,0 +1,37 @@
+{
+  "gvnf": "1.0",
+  "locale": "en",
+  "strings": {
+    "game.title": "GalForge — Extensions Demo",
+
+    "char.guide.name": "Guide",
+
+    "ending.cleared.title": "Orientation Complete",
+
+    "s01.guide.welcome": "Welcome to the GalForge extensions demo. I'm your guide for the next minute.",
+    "s01.guide.layout": "See the Layout control at the top? This game ships its own — “Visor HUD” — imported with galforge-import-layout. Switch to it any time: it re-skins this very screen, no player fork.",
+    "s01.guide.adhoc": "What comes next isn't ordinary dialogue — it's an adhoc scene: a little quiz the command grammar can't express, run by a developer module that galforge-import-adhoc wired into the flow.",
+    "s01.guide.start": "Three quick questions. Answer two correctly to pass. Ready when you are.",
+    "s01.guide.pass": "Nicely done — you passed. The quiz wrote your score back into the story, and we branched on the result to land here.",
+    "s01.guide.fail": "Close! You didn't quite pass this time — but the result still wrote back, and we branched here instead. Same machinery, different path.",
+    "s01.guide.outro": "That's the whole trick: a custom layout re-skins the screen, an adhoc scene adds a beat the grammar can't, and both stay lint-clean. Now go build something.",
+
+    "quiz.title": "Orientation Quiz",
+    "quiz.label": "Question",
+
+    "quiz.q1": "How many character sprites can the GalForge stage show at once?",
+    "quiz.q1.a": "Two — the alternating two-character rule.",
+    "quiz.q1.b": "Exactly one, always.",
+    "quiz.q1.c": "As many as the scene declares.",
+
+    "quiz.q2": "When an adhoc scene finishes, what rejoins the common flow?",
+    "quiz.q2.a": "A brand-new scene file it writes to disk.",
+    "quiz.q2.b": "A result: a declared exit plus variables written back.",
+    "quiz.q2.c": "Nothing — the game just ends.",
+
+    "quiz.q3": "How does the runtime activate a custom stage layout?",
+    "quiz.q3.a": "You edit and rebuild the player's source.",
+    "quiz.q3.b": "It opens the layout as a separate HTML page.",
+    "quiz.q3.c": "It sets a data-layout attribute on the stage root."
+  }
+}

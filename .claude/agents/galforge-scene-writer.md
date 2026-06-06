@@ -59,6 +59,21 @@ acceptable as a draft — the localizer will key it. Keep keys structured: `s<NN
 Set `entry` to the first scene; ensure every `variables` flag your choices read/write is
 declared with an initial value; ensure every `{ "end":"X" }` has a matching `endings.X`.
 
+## Beyond the command grammar — developer assets (don't author these from a novel)
+Two beats fall outside the §8 grammar; you should **recognise and preserve** them, but you do
+not write their code from prose — they arrive from a game developer and are wired in by a
+dedicated skill:
+- **Adhoc scene (§14):** a scene with an `adhoc` block (not `script`) whose presentation is a
+  developer JS module (minigame / map / puzzle / bespoke cutscene), returning a result that
+  writes back variables and takes a declared exit. If a beat genuinely can't be a command list
+  and the developer supplies a module, wire it with the **`galforge-import-adhoc`** skill, then
+  treat its declared exits as ordinary flow targets (`call`/`jump`) and declare its
+  `reads`/`writes`/exit-`set` variables in `game.json`. Reference: `s01b_desk.json`.
+- **Custom layout (`game.json` `ui` block):** a developer-shipped stage layout (a scoped CSS
+  in `ui/layouts/`). This is a **web-runtime extension**, lint-safe and *not* GVNF core — leave
+  any existing `ui` block intact when finalising `game.json`; never delete it. Imports are done
+  with the **`galforge-import-layout`** skill.
+
 ## Verify (own this gate for scripting)
 Run `python3 tools/galforge_lint.py <project>` and drive **errors to zero**:
 missing assets, undeclared expressions/outfits, dangling jumps, **stage violations**,

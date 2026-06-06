@@ -107,6 +107,23 @@ Final summary to the user:
 > art/voice pipeline.
 > To play: point any GVNF runtime at `games/<game-id>/` (entry: `<entry-scene>`).
 
+## Importing developer assets (out-of-band from the source-text pipeline)
+
+The pipeline above adapts a *story* into a generated project. A **game developer** may also
+hand you hand-built presentation to fold into a project — these are not generated from prose;
+they are *imported* and wired in by a dedicated skill, then re-validated with `galforge lint`:
+
+| Developer brings… | Use skill | Wires into |
+|-------------------|-----------|------------|
+| A custom **stage layout** (a scoped CSS that re-skins the normal play screen) | [`galforge-import-layout`](../galforge-import-layout/SKILL.md) | `ui/layouts/<id>.css` + `game.json` `ui.layouts` (web-runtime extension, lint-safe) |
+| An **adhoc scene** (a JS module for a beat the §8 grammar can't model — minigame/map/puzzle) | [`galforge-import-adhoc`](../galforge-import-adhoc/SKILL.md) | `adhoc/<name>.js` (+ css) + a `scenes/<id>.json` `adhoc` block (§14), reached by `call`/`jump` |
+
+Both are safe to run **before, during, or after** generation; both end on the same lint gate.
+When generating, the scene-writer leaves any developer `ui` block / adhoc scene intact. The
+contract for both is specified in
+[`docs/spec/developer-extensions.md`](../../../docs/spec/developer-extensions.md), with a
+runnable demo in [`games/extensions-demo/`](../../../games/extensions-demo/).
+
 ## Notes for the conductor
 
 - If no galforge-* agents are available in this environment, run the phases inline yourself

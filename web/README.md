@@ -132,6 +132,12 @@ the **Layout** picker (under *Custom (this game)*), and toggles it on with
 `data-layout="<your-id>"` — no player fork required. This is the layout-level
 counterpart to the §14 adhoc *scene* escape hatch.
 
+> The full contract (the `ui.layouts` fields, the `data-layout` scoping rule, and
+> the stage-zone class "API") is specified in
+> [`docs/spec/developer-extensions.md` §2](../docs/spec/developer-extensions.md);
+> the `galforge-import-layout` skill imports one into a project. A runnable demo
+> ships as [`games/extensions-demo`](../games/extensions-demo/) (the `visor` layout).
+
 ```jsonc
 // game.json
 "ui": {

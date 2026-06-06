@@ -1,0 +1,13 @@
+{
+  "gvnf": "1.0",
+  "id": "guide",
+  "name": "@char.guide.name",
+  "nameColor": "#46f2e6",
+  "sprite": "guide",
+  "defaultOutfit": "default",
+  "defaultPose": "stand",
+  "defaultFace": "neutral",
+  "defaultPosition": "center",
+  "voice": { "default": null },
+  "tags": ["guide"]
+}
