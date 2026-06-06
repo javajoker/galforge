@@ -57,3 +57,19 @@ source text
 These are invoked by the `galforge-generate` orchestrator via the Agent tool. If no
 subagents are available, a single Claude can execute each phase inline using that agent's
 file as the phase spec.
+
+## Adjacent: importing developer-built presentation
+
+The pipeline above turns *prose* into a project. When a **game developer** supplies hand-built
+presentation to fold into a project, it is *imported* (not generated) by a dedicated skill and
+re-validated on the same lint gate. These run on demand, independent of the source-text flow:
+
+- [`galforge-import-layout`](../skills/galforge-import-layout/SKILL.md) — wire a developer's
+  custom **stage layout** (a scoped CSS that re-skins the normal play screen) into
+  `ui/layouts/` + `game.json` `ui.layouts` (a lint-safe web-runtime extension, not GVNF core).
+- [`galforge-import-adhoc`](../skills/galforge-import-adhoc/SKILL.md) — wire a developer's
+  **adhoc scene** (a JS module for a beat the §8 grammar can't model — minigame / map /
+  puzzle) into `adhoc/` + a `scenes/<id>.json` `adhoc` block (Script Standard §14).
+
+The `galforge-scene-writer` recognises both and leaves any developer `ui` block / adhoc scene
+intact when it finalises `game.json` and scenes.
