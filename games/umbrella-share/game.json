@@ -11,6 +11,18 @@
   "text": { "speed": "normal", "autoDelayMs": 1200 },
   "audio": { "bgm": 0.8, "se": 0.9, "voice": 1.0 },
   "stage": { "mode": "auto", "emphasis": { "dim": 0.55, "narration": "keep" } },
+  "ui": {
+    "layout": "adv",
+    "layouts": [
+      {
+        "id": "spotlight",
+        "name": "Spotlight (custom)",
+        "short": "Spot",
+        "style": "ui/layouts/spotlight.css",
+        "interaction": "overlay"
+      }
+    ]
+  },
   "transitions": { "bg": "dissolve", "char": "dissolve", "cg": "fade" },
   "variables": {
     "route": "common",

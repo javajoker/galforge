@@ -1,0 +1,59 @@
+/* Spotlight — a developer (adhoc) stage layout shipped with the umbrella-share
+ * game, registered in game.json `ui.layouts`. The runtime injects this stylesheet
+ * and sets `data-layout="spotlight"` when it is active; everything below is scoped
+ * to that attribute so it only applies for this layout, and targets the standard
+ * stage-zone classes the player exposes:
+ *
+ *   .gf-scene       zone 1+2 (background + sprites)   .gf-slot[.active|.dim]
+ *   .gf-dialogue    zone 3 (dialogue box)             --nc = speaker colour
+ *   .gf-interaction zone 4 (choices / adhoc)          .overlay | .dock
+ *
+ * The effect: a vignette that pulls focus to the centre, only the active speaker
+ * lit (the partner fades fully out), and the line in a floating card whose top
+ * edge picks up the speaker's nameplate colour.
+ */
+
+/* focus vignette over the stage */
+.gf-stage[data-layout="spotlight"] .gf-scene::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 4;
+  background: radial-gradient(ellipse 64% 72% at 50% 40%, transparent 42%, rgba(2, 3, 8, 0.86) 100%);
+}
+
+/* spotlight the active speaker: fade the partner out, centre + enlarge the lit one */
+.gf-stage[data-layout="spotlight"] .gf-slot.dim {
+  opacity: 0;
+}
+.gf-stage:not(.portrait)[data-layout="spotlight"] .gf-slot.active {
+  left: 50%;
+  right: auto;
+  transform: translateX(-50%);
+  height: 96%;
+}
+
+/* the line, in a floating card accented with the speaker's colour */
+.gf-stage:not(.portrait)[data-layout="spotlight"] .gf-dialogue {
+  left: 50%;
+  right: auto;
+  bottom: 6%;
+  transform: translateX(-50%);
+  width: min(760px, 88%);
+  min-height: 0;
+  padding: 18px 28px 22px;
+  background: linear-gradient(180deg, rgba(15, 18, 30, 0.94), rgba(8, 10, 18, 0.94));
+  border: 1px solid #ffffff20;
+  border-top: 3px solid var(--nc, #8fb6ff);
+  border-radius: 16px;
+  box-shadow: 0 20px 64px #000b;
+  backdrop-filter: blur(3px);
+}
+.gf-stage:not(.portrait)[data-layout="spotlight"] .gf-text {
+  max-width: none;
+}
+.gf-stage:not(.portrait)[data-layout="spotlight"] .gf-advance {
+  right: 18px;
+  bottom: 10px;
+}
