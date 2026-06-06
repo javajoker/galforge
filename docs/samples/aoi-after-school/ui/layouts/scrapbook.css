@@ -1,0 +1,99 @@
+/* Scrapbook — a developer (custom) stage layout shipped with the "Aoi, After
+ * School" sample and registered in game.json `ui.layouts`. It is the layout-level
+ * counterpart to the §14 adhoc *scene* in adhoc/keepsake.* : the runtime injects
+ * this stylesheet, lists "Scrapbook (custom)" in the player's Layout picker, and
+ * sets `data-layout="scrapbook"` on the stage root when it is active. Everything
+ * below is scoped to that attribute so it only applies for this layout, and only
+ * targets the standard stage-zone classes the player exposes — no player fork:
+ *
+ *   .gf-stage       the stage root          (carries data-layout + .portrait)
+ *   .gf-scene       zone 1+2 (bg + sprites) .gf-slot[.active|.dim]
+ *   .gf-dialogue    zone 3 (dialogue box)   --nc = the speaker's nameplate colour
+ *   .gf-interaction zone 4 (choices/adhoc)  .overlay | .dock
+ *
+ * The effect: the scene is matted like a developed photo in a warm scrapbook
+ * page, the line sits in a caption card whose left edge picks up the speaker's
+ * colour, and the off-speaker stays gently in-frame (warm-faded, not hidden) so
+ * the two-character alternation reads like a remembered afternoon.
+ *
+ * Landscape only — every rule is scoped `:not(.portrait)` so phones keep the
+ * clean single-character bottom bar (script-standard §6, portrait collapse).
+ */
+
+/* the scrapbook page: a warm paper matte revealed around the inset photo */
+.gf-stage[data-layout="scrapbook"] {
+  background:
+    radial-gradient(120% 120% at 50% 0%, #efd9b8 0%, #e3c79f 46%, #cdab7d 100%);
+}
+
+/* zone 1+2 → a matted photograph: inset from the page, soft-cornered, with a
+ * cream border and a drop shadow that lifts it off the paper */
+.gf-stage:not(.portrait)[data-layout="scrapbook"] .gf-scene {
+  inset: 5.5% 5.5% 5.5%;
+  border-radius: 6px;
+  overflow: hidden;
+  border: 6px solid #fbf3e3;
+  box-shadow:
+    0 22px 48px rgba(48, 28, 18, 0.42),
+    inset 0 0 0 1px rgba(70, 44, 28, 0.18);
+}
+
+/* a faint warm light from the top-right corner — the after-school sun on glossy
+ * paper, deliberately unlike the dark centre vignette other layouts use */
+.gf-stage:not(.portrait)[data-layout="scrapbook"] .gf-scene::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 4;
+  background: radial-gradient(140% 120% at 88% 8%, rgba(255, 226, 168, 0.34), transparent 56%);
+}
+
+/* The off-speaker doesn't leave the photo — it warm-fades in place, the way the
+ * non-active partner sits at the edge of a memory while the speaker is in focus.
+ * (Contrast the umbrella-share `spotlight` layout, which fades the partner fully
+ * out.) The active speaker stays at full warmth. */
+.gf-stage:not(.portrait)[data-layout="scrapbook"] .gf-slot {
+  transition: opacity 0.3s ease, filter 0.3s ease;
+}
+.gf-stage:not(.portrait)[data-layout="scrapbook"] .gf-slot.dim {
+  opacity: 0.72;
+  filter: brightness(0.82) saturate(0.78) sepia(0.22);
+}
+.gf-stage:not(.portrait)[data-layout="scrapbook"] .gf-slot.active {
+  filter: brightness(1.04) saturate(1.04);
+}
+
+/* zone 3 → a caption card tucked into the bottom of the photo, its left edge
+ * the speaker's nameplate colour (--nc, set by the player on .gf-dialogue) */
+.gf-stage:not(.portrait)[data-layout="scrapbook"] .gf-dialogue {
+  left: 8%;
+  right: 8%;
+  bottom: 8.5%;
+  min-height: 0;
+  padding: 15px 24px 18px;
+  background: linear-gradient(180deg, rgba(252, 246, 235, 0.97), rgba(244, 233, 214, 0.97));
+  border: 1px solid rgba(120, 84, 52, 0.28);
+  border-left: 4px solid var(--nc, #8a6a44);
+  border-radius: 8px;
+  box-shadow: 0 14px 34px rgba(40, 24, 14, 0.4);
+}
+.gf-stage:not(.portrait)[data-layout="scrapbook"] .gf-name {
+  color: var(--nc, #6b4a28);
+  text-shadow: none;
+}
+.gf-stage:not(.portrait)[data-layout="scrapbook"] .gf-text {
+  color: #3a2a1c;
+  max-width: none;
+  text-shadow: none;
+}
+.gf-stage:not(.portrait)[data-layout="scrapbook"] .gf-advance {
+  right: 16px;
+  bottom: 10px;
+  color: #a07a4c;
+}
+
+/* zone 4 → choices float over the photo on a warm scrim that matches the page */
+.gf-stage:not(.portrait)[data-layout="scrapbook"] .gf-interaction.overlay.expanded .gf-int-body {
+  background: radial-gradient(ellipse at center, rgba(40, 24, 14, 0.34), rgba(40, 24, 14, 0.74));
+}

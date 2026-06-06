@@ -21,6 +21,9 @@ aoi-after-school/
 ├── adhoc/                    # §14 adhoc-scene module + style
 │   ├── keepsake.js           #   custom-styled "a moment to spare" card
 │   └── keepsake.css
+├── ui/                       # web-runtime extension: developer custom layouts
+│   └── layouts/
+│       └── scrapbook.css     #   a registered stage layout (game.json `ui.layouts`)
 └── scenes/
     ├── s01_classroom.json    # intro, 3-way alternating dialogue, close-up, calls s01b, choice
     ├── s01b_desk.json        # ADHOC scene (§14): custom module; returns to the flow
@@ -49,6 +52,7 @@ aoi-after-school/
 | Camera effect | `s02`: `{ "flash": … }` |
 | Localization (en default + ja) | `i18n/` |
 | **Adhoc scene** (custom module, write-back, declared exits, **fullscreen**) | `s01b_desk.json` (`kind:"adhoc"`, `fullscreen:true`) + `adhoc/keepsake.*`; `call`ed from `s01` |
+| **Developer custom layout** (web-runtime extension) | `game.json` › `ui.layouts` (`scrapbook`) + `ui/layouts/scrapbook.css` |
 | Endings | `good`, `normal` |
 
 ## The two-character rule in action (s01 stage trace)
@@ -102,6 +106,46 @@ This scene also sets **`"fullscreen": true`** (§14.1): the module takes over th
 viewport (past the 16:9 letterbox) and the player chrome is hidden for its duration — an
 immersive takeover. Drop the flag (the default) to render the module into a stage-sized
 surface inside the frame, with the controls still available above it.
+
+## Developer custom layout
+
+Where an *adhoc scene* hands one beat's whole presentation to developer code, a **custom
+layout** lets the developer re-style the *standard* play screen without forking the player.
+A game registers its own stage layout in `game.json` under a `ui` block, and ships a scoped
+stylesheet the runtime injects:
+
+```jsonc
+// game.json
+"ui": {
+  "layout": "adv",                 // the game's default stage layout
+  "layouts": [
+    {
+      "id": "scrapbook",           // your id (must not collide with a built-in)
+      "name": "Scrapbook (custom)",// shown in the player's Layout picker
+      "short": "Scrap",
+      "style": "ui/layouts/scrapbook.css",  // project-relative href (like adhoc styles)
+      "interaction": "overlay"     // default interaction-zone mode: overlay | dock
+    }
+  ]
+}
+```
+
+The runtime adds *Scrapbook (custom)* to the **Layout** control (under *Custom (this game)*)
+and toggles it on by setting `data-layout="scrapbook"` on the stage root. The stylesheet
+([`ui/layouts/scrapbook.css`](aoi-after-school/ui/layouts/scrapbook.css)) targets the same
+**stage-zone classes** the player exposes — `.gf-scene` (background + sprites,
+`.gf-slot.active`/`.dim`), `.gf-dialogue` (the `--nc` custom property carries the speaker's
+nameplate colour), `.gf-interaction` — and **must be scoped** under `[data-layout="scrapbook"]`
+so it only applies when active. Landscape-only rules are scoped `:not(.portrait)` so phones
+keep the clean single-character bottom bar (§6 portrait collapse). The shipped layout mats
+the scene like a photo on a warm scrapbook page and floats the line in a caption card
+accented with the speaker's colour.
+
+The `ui` block is a **web-runtime extension**, not part of the GVNF core schema: the schema
+ignores it (`additionalProperties`) and `galforge lint` does not interpret it, so it stays
+lint-safe and portable — a runtime that doesn't know about layouts just renders its default
+play screen. (For a fully bespoke beat — a minigame, map, terminal — reach for an adhoc
+**scene** instead; for a different *look* on the normal screen, a custom layout.)
 
 ## Validate it
 
