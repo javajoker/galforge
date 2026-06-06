@@ -12,6 +12,12 @@ export const CONFIG = {
   // "<id>" → boot straight into that one game (single-title static publish).
   //          e.g. defaultGame: "umbrella-share"
   defaultGame: null,
+
+  // Default stage layout when a game doesn't declare its own `ui.layout`.
+  // null → fall back to the built-in default ("adv"). One of the ids in
+  // src/ui/layouts.js: "adv" | "nvl" | "dock-right" | "dock-left" | "cinematic".
+  // An engineer can still switch live from the player's Layout control.
+  layout: null,
 };
 
 function baseURL() {

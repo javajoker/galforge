@@ -2,33 +2,9 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { useEngine, useOrientation, useTypewriter, useAudio } from "../hooks.js";
 import Stage from "./Stage.jsx";
-import Adhoc from "./Adhoc.jsx";
-
-/* ----------------------------------------------------------------- Dialogue */
-function Dialogue({ view, shown, typing }) {
-  const sp = view.speaker;
-  return (
-    <div className="gf-dialogue" style={sp ? { "--nc": sp.color || "#cfcfd6" } : undefined}>
-      {sp ? <div className="gf-name">{sp.name}</div> : null}
-      <div className="gf-text">{shown}</div>
-      {!typing ? <div className="gf-advance">▾</div> : null}
-    </div>
-  );
-}
-
-/* ------------------------------------------------------------------ Choices */
-function Choices({ view, onChoose }) {
-  return (
-    <div className="gf-choices gf-ui-block">
-      {view.prompt ? <div className="gf-choice-prompt">{view.prompt}</div> : null}
-      {view.choices.map((c) => (
-        <button key={c.pos} className="gf-choice" disabled={c.enabled === false} onClick={() => onChoose(c.pos)}>
-          {c.label}
-        </button>
-      ))}
-    </div>
-  );
-}
+import DialogueBox from "./zones/DialogueBox.jsx";
+import InteractionView from "./zones/InteractionView.jsx";
+import { allLayouts, getLayout, isLayoutId, resolveLayoutId, useLayoutPref, useCustomLayoutStyles } from "./layouts.js";
 
 /* ------------------------------------------------------------------ Ending */
 function Ending({ view, onRestart }) {
@@ -106,7 +82,8 @@ function SaveLoad({ engine, mode, onClose, onLoaded }) {
 }
 
 /* ----------------------------------------------------------------- Controls */
-function Controls({ view, engine, auto, skip, onAuto, onSkip, onPanel }) {
+function Controls({ view, engine, auto, skip, onAuto, onSkip, onPanel, layoutValue, autoShort, options, onLayout }) {
+  const customs = options.filter((l) => l.custom);
   return (
     <div className="gf-controls gf-ui-block">
       <Link className="gf-ctl" to="/" title="Game list">
@@ -127,6 +104,23 @@ function Controls({ view, engine, auto, skip, onAuto, onSkip, onPanel }) {
       <button className="gf-ctl" onClick={() => onPanel("load")} title="Load">
         Load
       </button>
+      <select className="gf-lang gf-layout" value={layoutValue} onChange={(e) => onLayout(e.target.value)} title="Stage layout">
+        <option value="auto">{`Layout: Auto · ${autoShort}`}</option>
+        {options.filter((l) => !l.custom).map((l) => (
+          <option key={l.id} value={l.id}>
+            {l.name}
+          </option>
+        ))}
+        {customs.length ? (
+          <optgroup label="Custom (this game)">
+            {customs.map((l) => (
+              <option key={l.id} value={l.id}>
+                {l.name}
+              </option>
+            ))}
+          </optgroup>
+        ) : null}
+      </select>
       {view.locales && view.locales.length > 1 ? (
         <select className="gf-lang" value={view.locale} onChange={(e) => engine.setLocale(e.target.value)} title="Language">
           {view.locales.map((c) => (
@@ -154,6 +148,24 @@ export default function Player() {
   const [flash, setFlash] = useState(null);
   const stageRef = useRef(null);
   const lastVisFx = useRef(0);
+
+  // ---- stage layout (built-in presets + developer custom layouts; see ui/layouts.js) ----
+  const [layoutPref, setLayoutPref] = useLayoutPref();
+  useCustomLayoutStyles(view); // inject any game-supplied layout stylesheets
+  const layoutId = resolveLayoutId(view, layoutPref);
+  const layout = getLayout(layoutId, view);
+  const layoutOptions = allLayouts(view);
+  // if the persisted choice isn't valid for THIS game (e.g. a custom from another
+  // title) show "Auto" in the picker, but keep the stored preference intact.
+  const layoutSelValue = layoutPref !== "auto" && isLayoutId(layoutPref, view) ? layoutPref : "auto";
+  // Interaction zone expand state: null → follow the layout's default mode
+  // (overlay layouts expand to full stage; dock layouts start docked). Reset on
+  // every layout change so switching layouts re-applies that layout's intent.
+  const [intExpanded, setIntExpanded] = useState(null);
+  useEffect(() => {
+    setIntExpanded(null);
+  }, [layoutId]);
+  const expanded = intExpanded != null ? intExpanded : layout.interaction === "overlay";
 
   const isLine = view && view.status === "line";
   const { shown, typing, finish } = useTypewriter(isLine ? view.text : "", view && view.lineId, 18, skip);
@@ -272,16 +284,20 @@ export default function Player() {
   const fsAdhoc = view.status === "adhoc" && view.adhoc && view.adhoc.fullscreen;
 
   return (
-    <div className={`gf-stage${portrait ? " portrait" : ""}`}>
+    <div className={`gf-stage${portrait ? " portrait" : ""}`} data-layout={layoutId}>
       <div className="gf-frame" ref={stageRef} onClick={onStageClick}>
         <Stage view={view} portrait={portrait} />
 
-        {view.status === "adhoc" ? (
-          <Adhoc view={view} engine={engine} />
-        ) : view.status === "choice" ? (
-          <Choices view={view} onChoose={(p) => engine.choose(p)} />
-        ) : view.status === "line" ? (
-          <Dialogue view={view} shown={shown} typing={typing} />
+        {view.status === "line" ? <DialogueBox view={view} shown={shown} typing={typing} /> : null}
+
+        {view.status === "choice" || view.status === "adhoc" ? (
+          <InteractionView
+            view={view}
+            engine={engine}
+            mode={layout.interaction}
+            expanded={expanded}
+            onToggleExpand={() => setIntExpanded(!expanded)}
+          />
         ) : null}
 
         {!fsAdhoc ? (
@@ -296,6 +312,10 @@ export default function Player() {
               finish();
             }}
             onPanel={(p) => setPanel(p)}
+            layoutValue={layoutSelValue}
+            autoShort={layout.short}
+            options={layoutOptions}
+            onLayout={setLayoutPref}
           />
         ) : null}
 
